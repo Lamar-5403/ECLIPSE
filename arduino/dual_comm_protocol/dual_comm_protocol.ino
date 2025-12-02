@@ -17,6 +17,44 @@ void readLine(char* buffer, size_t maxLen) {
   buffer[idx] = '\0';  // Ensure string is properly terminated
 }
 
+
+// Structure of frame for payload transport
+typedef struct {
+  uint8_t start;
+  msg_type_t type;
+  uint8_t len;
+  uint8_t payload[256];
+  uint16_t crc;
+} frame_t;
+
+// Enum for finite state machine
+enum State {
+  WAIT_START,
+  READ_TYPE,
+  READ_LEN,
+  READ_PAYLOAD,
+  READ_CRC
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void setup() {
   Serial.begin(115200);
 
@@ -47,8 +85,7 @@ void setup() {
     if (now - startTime >= 10000) {
       Serial.println("Could not connect to network.");
       exit(1);
-    }
-    else if(now - lastCheck >= 250) {
+    } else if (now - lastCheck >= 250) {
       lastCheck = now;
       Serial.println(WiFi.status());
     }

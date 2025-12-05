@@ -17,17 +17,27 @@ void readLine(char* buffer, size_t maxLen) {
   buffer[idx] = '\0';  // Ensure string is properly terminated
 }
 
+// Message type architecture
+typedef enum {
+    MSG_ARM              = 0x01,
+    MSG_DISARM           = 0x02,
+    MSG_STATUS_REQUEST   = 0x03,
+    MSG_STATUS_RESPONSE  = 0x04,
+    MSG_ERROR            = 0x05,
+    MSG_HEARTBEAT        = 0x06
+} msg_type_t;
+
 
 // Structure of frame for payload transport
-typedef struct {
+typedef struct __attribute__((packed)) {
   uint8_t start;
-  msg_type_t type;
+  uint8_t type;
   uint8_t len;
-  uint8_t payload[256];
+  uint8_t payload[256];  // Fixed length, traversed to len;
   uint16_t crc;
 } frame_t;
 
-// Enum for finite state machine
+// Enum for finite state machine for parsing 
 enum State {
   WAIT_START,
   READ_TYPE,
@@ -35,6 +45,16 @@ enum State {
   READ_PAYLOAD,
   READ_CRC
 };
+
+// FSM Enum for system
+typedef enum {
+  SYS_SAFE,
+  SYS_ARMING,
+  SYS_ARMED,
+  SYS_DISARMED,
+  SYS_LOCKOUT
+} system_state_t;
+
 
 
 

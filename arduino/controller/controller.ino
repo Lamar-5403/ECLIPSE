@@ -1,5 +1,7 @@
 #include <WiFi.h>
 
+#define FRAME_START_BYTE 0xAA
+
 // Buffers for WiFi credentials; fixed size to avoid dynamic allocation and reduce memory fragmentation
 char ssid[64];
 char password[64];
@@ -54,9 +56,6 @@ typedef enum {
   SYS_DISARMED,
   SYS_LOCKOUT
 } system_state_t;
-
-
-
 
 
 

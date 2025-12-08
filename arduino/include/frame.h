@@ -4,7 +4,7 @@
 #define FRAME_START_BYTE 0xAA
 #define FRAME_MAX_PAYLOAD 256
 
-typdef enum {
+typedef enum {
     MSG_ARM             = 0x01
     MSG_DISARM          = 0x02
     MSG_STATUS_REQUEST  = 0x03
@@ -13,7 +13,7 @@ typdef enum {
     MSG_HEARTBEAT       = 0x06
 } msg_type_t;
 
-typdef struct __attribute__((packed)) {
+typedef struct __attribute__((packed)) {
     uint8_t start;
     uint8_t type;
     uint8_t len;
@@ -21,7 +21,7 @@ typdef struct __attribute__((packed)) {
     uint16_t crc;
 } frame_t;
 
-typdef enum {
+typedef enum {
     WAIT_START,
     READ_TYPE,
     READ_LEN,

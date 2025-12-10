@@ -1,5 +1,9 @@
 #include "frame.h"
 
+uint16_t crc16(uint8_t* f, int len) {
+    // calculate crc value
+}
+
 void frame_build(frame_t* f, msg_type_t type, const uint8_t* data, uint8_t len) {
     f->start = FRAME_START_BYTE;
     f->type = type;

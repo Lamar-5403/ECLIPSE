@@ -1,0 +1,1 @@
+void system_controller_init();

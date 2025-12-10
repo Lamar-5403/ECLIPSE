@@ -37,6 +37,9 @@ htmlcov/
 *.hex
 *.elf
 *.bin
+arduino/src/wifi_config.*
+arduino/.pio
+platformio.ini
 
 # --------------------------
 # Raspberry Pi / Linux

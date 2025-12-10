@@ -37,7 +37,7 @@ htmlcov/
 *.hex
 *.elf
 *.bin
-arduino/src/wifi_config.*
+arduino/include/wifi_config.*
 arduino/.pio
 platformio.ini
 

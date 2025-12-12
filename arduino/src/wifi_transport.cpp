@@ -1,9 +1,7 @@
 #include <Arduino.h>
 #include "WiFi.h"
+#include "wifi_config.h"
 
 void wifi_transport_init() {
-    char* SSID;
-    char* PASS;
-
     WiFi.begin(SSID, PASS);
 }

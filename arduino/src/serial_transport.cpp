@@ -4,3 +4,7 @@
 void serial_transport_init() {
     Serial.begin(115200);
 }
+
+void serial_poll() {
+    
+}

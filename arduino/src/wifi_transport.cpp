@@ -5,3 +5,7 @@
 void wifi_transport_init() {
     WiFi.begin(SSID, PASS);
 }
+
+void wifi_poll() {
+    // do something;
+}

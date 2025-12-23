@@ -1,8 +1,8 @@
-#include <Arduino.h>
 #include "transport_serial.h"
-#include "frame_decoder.h"
 #include <cstdint>
+#include <Arduino.h>
 #include "frame.h"
+#include "frame_decoder.h"
 
 void transport_serial_init() {
     Serial.begin(115200); 

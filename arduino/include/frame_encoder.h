@@ -1,5 +1,5 @@
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include "frame.h"
 
 uint16_t crc16_ccitt_false(const uint8_t *, size_t);

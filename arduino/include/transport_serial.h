@@ -1,5 +1,5 @@
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
 void transport_serial_init();
 void transport_serial_poll();

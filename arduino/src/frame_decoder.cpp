@@ -1,5 +1,6 @@
-#include "frame.h"
 #include "frame_decoder.h"
+#include <cstdint>
+#include "frame.h"
 #include "system_controller.h"
 
 static frame_decoder_state_t decoder_state = WAIT_START;

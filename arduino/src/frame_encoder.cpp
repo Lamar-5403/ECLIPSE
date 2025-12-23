@@ -20,7 +20,7 @@ uint16_t crc16_ccitt_false(const uint8_t *data, size_t len) {
     return crc;
 }
 
-void frame_build(frame_t* f, msg_type_t type, const uint8_t* data, uint8_t len) {
+void encode_frame(frame_t* f, msg_type_t type, const uint8_t* data, uint8_t len) {
     f->start = FRAME_START_BYTE;
     f->type = type;
     f->len = len;

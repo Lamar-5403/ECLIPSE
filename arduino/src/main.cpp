@@ -1,17 +1,19 @@
 #include <Arduino.h>
-#include "serial_transport.h"
-#include "wifi_transport.h"
+#include "transport_serial.h"
+#include "transport_wifi.h"
 #include "system_state.h"
 #include "frame.h"
-#include "controller.h"
+#include "system_controller.h"
+#include "system_state.h"
 
 
 void setup() {
-  serial_transport_init();
-  wifi_transport_init();
-  system_controller_init();
+  transport_serial_init();
+  transport_wifi_init();
+  system_state_init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  transport_serial_poll();
+  transport_wifi_poll();
 }

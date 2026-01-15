@@ -85,13 +85,18 @@ Attack execution is only permitted while the system is in the ARMED state.
 ## Repository Structure
 
 ```
-arduino/
-|-- include/    #Public headers
-|-- src/        # Source files
-|-- lib/        # External libraries
-|-- tests/      # Unit and integration tests
-|-- docs/       # Formal project documentation
-|-- platform.ini
+/arduino    - Microcontroller firmware (C/C++)
+/bin        - Built artifacts and binaries
+/docs       - Architecture, protocol, and design documentation
+/infra      - Build, CI, deployment, and tooling infrastructure
+/pi0wh      - Raspberry Pi Zero WH subsystems
+/pi5        - Raspberry Pi 5 sybsystems
+/scripts    - Automation and developer utilities
+/tests      - Unit, integration, and protocol tests
+
+.gitignore
+CHANGELOG.md
+README.md
 ```
 
 ---
@@ -115,3 +120,4 @@ Formal documentation is located in the `/docs` directory:
 
 This project is under active development.
 Interfaces, protocols, and system behavior are subject to change.
+

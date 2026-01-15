@@ -4,7 +4,7 @@ Embedded Cybersecurity Control and Evidence Integrity System
 ---
 
 ## Overview
-ECLIPSE is a distributed embedded system designed to **simulate, control, and supervise cybersecurity attack operations** in a **tightly governed environment**. The system separates **authority, execution, and evidence preservation** across independent hardware platforms.
+ECLIPSE is a distributed embedded system designed to simulate, control, and supervise cybersecurity attack operations in a tightly governed environment. The system separates authority, execution, and evidence preservation across independent hardware platforms.
 
 ---
 
@@ -22,7 +22,7 @@ ECLIPSE is a distributed embedded system designed to **simulate, control, and su
 - Preserves evidence integrity
 - Monitors Pi 5 health and behavior
 
-### Arduino Uno R4 Wifi - System Authority Controller
+### Arduino Uno R4 WiFi - System Authority Controller
 
 - Maintains global system state
 - Enforces authorization and safety rules
@@ -36,7 +36,7 @@ ECLIPSE is a distributed embedded system designed to **simulate, control, and su
 - Deterministic state enforcement
 - No implicit trust between nodes
 - Physical separation of authority and execution
-- Corruption detection via CRC framing
+- Transmission error detection via CRC framing
 
 ---
 
@@ -54,16 +54,14 @@ Detailed specifications are defined in `/docs/03_comm_protocol.md`.
 
   ---
 
-  ## High-Level Architecture
+## High-Level Architecture
 
   ```text
-  Pi Zero (Evidence)
-        ↑
-        |
-  Arduino (Authority)
-        |
-        ↓
-  Pi 5 (Attack Execution)
+        Arduino (Authority)
+                |
+--------------------------------
+       |                       |
+Pi Zero (Evidence)   Pi 5 (Attack Execution)
 ```
 
 ---
@@ -90,7 +88,7 @@ Attack execution is only permitted while the system is in the ARMED state.
 /docs       - Architecture, protocol, and design documentation
 /infra      - Build, CI, deployment, and tooling infrastructure
 /pi0wh      - Raspberry Pi Zero WH subsystems
-/pi5        - Raspberry Pi 5 sybsystems
+/pi5        - Raspberry Pi 5 subsystems
 /scripts    - Automation and developer utilities
 /tests      - Unit, integration, and protocol tests
 
@@ -105,14 +103,14 @@ README.md
 
 Formal documentation is located in the `/docs` directory:
 
--`00_overview.md`
--`01_requirements.md`
--`02_architecture.md`
--`03_comm_protocol.md`
--`04_security_threat_model.md`
--`05_test_plan.md`
--`06_bom.md`
--`07_deployment.md`
+- `00_overview.md`
+- `01_requirements.md`
+- `02_architecture.md`
+- `03_comm_protocol.md`
+- `04_security_threat_model.md`
+- `05_test_plan.md`
+- `06_bom.md`
+- `07_deployment.md`
 
 ---
 
@@ -120,4 +118,5 @@ Formal documentation is located in the `/docs` directory:
 
 This project is under active development.
 Interfaces, protocols, and system behavior are subject to change.
+
 

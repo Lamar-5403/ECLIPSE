@@ -1,5 +1,5 @@
 # E.C.L.I.P.S.E.
-Embedded Cybersecurity Control and Evidence Integrity System
+Embedded, Compartmentalized Layer for Integrity, Protection, Supervision, and Evidence.
 
 ---
 
@@ -118,5 +118,6 @@ Formal documentation is located in the `/docs` directory:
 
 This project is under active development.
 Interfaces, protocols, and system behavior are subject to change.
+
 
 

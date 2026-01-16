@@ -19,7 +19,20 @@ All actions performed by the system are constrained to be intentional, test-driv
 
 ---
 
-## 2.0 ASSUMPTIONS AND CONSTRAINTS
+## 2.0 OPERATING ASSUMPTIONS
+
+The system operates under the following assumptions:
+
+1. The transport delivers bytes in the order transmitted.
+2. Byte loss, duplication, or corruption is possible, therefore no guarantees are assumed regarding latency or delivery deadlines.
+3. The authoritative node boots into a known SAFE state.
+4. Non-authoritative nodes may reboot, reset, or disappear without notice.
+5. Node behavior is independent. Nodes do not share memory or clocks, enforce their own local safety constraints independent of peer behavior, and are permitted to refuse commands without explanation.
+6. All command execution is intentional and operator-initiated.
+7. Internal nodes are not assumed to be mutually trustworthy.
+8. Compromise of a non-authoritative node does not imply compromise of the authoritative node.
+9. Evidence integrity is not cryptographically enforced in the current design.
+10. A human operator is present during system use in a controlled test or research environment. Insider threats are out of scope for this implementation and physical access to hardware implies total system compromise with no mitigation in place.
 
 ---
 
@@ -51,6 +64,8 @@ Trust is not transitive. Each node is evaluated independently, and loss of any n
 
 The system maintains a singular global state that governs permissible actions.
 
+Per assumption [3], the system is assumed to boot into a known SAFE state.
+
 State transitions are: 
 
 - Explicit
@@ -70,6 +85,7 @@ Control flow and data flow are intentionally separated.
 Control decisions originate from the authoritative node.
 Execution occurs on designated execution nodes.
 Observation and evidence collection occur independently of control.
+Control messages are authoritative, while observational messages are non-authoritative.
 
 No node is permitted to both authorize and execute critical actions.
 
@@ -81,11 +97,25 @@ The system treats evidence as a first-class artifact.
 
 Evidence collection is passive, append-only, and non-authoritative. The loss of evidence capability degrades observability but must not alter system behavior.
 
-Integrity guarantees are enforced structurally rather than cryptographically in the current design.
+Integrity guarantees are enforced structurally rather than cryptographically in the current design. Cryptographic enforcement planned for addition in future revisions.
 
 ---
 
 ## 8.0 SYSTEM BOUNDARIES
+
+**Physical:** The system assumes physical custody or controlled access to all nodes. Physical tampering, including hardware fault injection, are outside system responsibility.
+
+**Transport:** The system boundary ends at ordered byte delivery. Framing, retries, and validation begin only after bytes are received. Higher layers assume correct ordering per assumption [1].
+
+**Operator:** Human intent, correctness of test selection, and authorization to run attacks are external. The system does not validate operator legitimacy or intent.
+
+**Target:** The system makes no claims about correctness, safety, or legality of actions performed against external targets. Targets are treated as opaque entities.
+
+**Failure:** Simultaneous multi-node Byzantine behavior is outside scope. The design assumes at most one non-authoritative node fails at a time.
+
+**Security:** Identity, authentication, and non-repudiation are explicitly excluded in the current revision. Any trust inferred between nodes is architectural, not cryptographic.
+
+**Electrical:** Power integrity, voltage stability, and clock accuracy are assumed acceptable. Brownouts, clock drift, and signal degradation are not mitigated at the protocol or system level.
 
 ---
 
@@ -102,7 +132,7 @@ These exclusions are intentional and documented to prevent misinterpretation of 
 
 ---
 
-## 8.0 DOCUMENT RELATIONSHIPS
+## 10.0 DOCUMENT RELATIONSHIPS
 
 This overview establishes the conceptual foundation for all other system documentation.
 

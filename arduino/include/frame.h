@@ -18,6 +18,5 @@ typedef enum {
     MSG_DISARM           = 0x02,
     MSG_STATUS_REQUEST   = 0x03,
     MSG_STATUS_RESPONSE  = 0x04,
-    MSG_ERROR            = 0x05,
-    MSG_HEARTBEAT        = 0x06
+    MSG_HEARTBEAT        = 0x05,
 } msg_type_t;

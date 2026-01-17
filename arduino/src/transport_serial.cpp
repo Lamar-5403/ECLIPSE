@@ -9,7 +9,7 @@ void transport_serial_init() {
 }
 
 void transport_serial_poll() {
-    if (Serial.available() > 0) {
+    while (Serial.available() > 0) {
         frame_decoder_process_byte(Serial.read());
     }
 }

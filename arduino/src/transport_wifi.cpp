@@ -4,16 +4,23 @@
 #include "config_wifi.h"
 #include "frame_decoder.h"
 
+WiFiClient client;
+WiFiServer server(5230);
+
 void transport_wifi_init() {
+    Serial.begin(115200);
+
     WiFi.begin(SSID, PASS);
+
+    Serial.println("Connecting to network...");
 
     // Wait for connection
     unsigned long startTime = millis();
     unsigned long lastCheck = 0;
+    
+    unsigned long now = millis();
 
     while (WiFi.status() != WL_CONNECTED) {
-
-        unsigned long now = millis();
 
         if (now - startTime >= 10000) {
             Serial.println("Could not connect to network.");

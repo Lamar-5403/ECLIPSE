@@ -13,10 +13,10 @@ typedef struct __attribute__((packed)) {
 } frame_t;
 
 // Message type architecture
-typedef enum {
+enum class msg_type_t {
     MSG_ARM              = 0x01,
     MSG_DISARM           = 0x02,
     MSG_STATUS_REQUEST   = 0x03,
     MSG_STATUS_RESPONSE  = 0x04,
     MSG_HEARTBEAT        = 0x05,
-} msg_type_t;
+};

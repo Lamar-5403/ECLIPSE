@@ -1,13 +1,13 @@
 #include <cstddef>
 #include <cstdint>
 
-typedef enum {
+enum class connection_status_t {
     WIFI_UNITIALIZED,
     WIFI_CONNECTING,
     WIFI_CONNECTED,
     WIFI_DISCONNECTED,
     WIFI_FAILED
-} connection_status_t;
+};
 
 void transport_wifi_init();
 void transport_wifi_poll();

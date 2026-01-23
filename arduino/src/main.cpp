@@ -6,6 +6,14 @@
 #include "system_controller.h"
 #include "system_state.h"
 
+enum class life_cycle_state {
+  BOOTSTRAP, 
+  OPERATIONAL, 
+  FAULT
+};
+
+life_cycle_state system_lifecycle = BOOTSTRAP;
+
 
 void setup() {
   transport_serial_init();

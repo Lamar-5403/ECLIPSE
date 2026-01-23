@@ -2,7 +2,7 @@
 #include <cstdint>
 
 enum class connection_status_t {
-    WIFI_UNITIALIZED,
+    WIFI_UNINITIALIZED,
     WIFI_CONNECTING,
     WIFI_CONNECTED,
     WIFI_DISCONNECTED,

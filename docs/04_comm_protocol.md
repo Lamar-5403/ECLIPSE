@@ -28,7 +28,7 @@ This specification assumes the system architecture defined in `02_architecture.m
 
 ### 2.1 Message Frame Structure
 
-The protocol is transport-agnostic and may be conveyed over any reliable byte stream interface capable of preserving message order. All interprocessor messages conform to the following standardized frame format:
+The protocol is transport-agnostic and may be conveyed over any byte stream interface capable of preserving message order. All interprocessor messages conform to the following standardized frame format:
 
 ```text
 +----------+----------+----------+----------+----------+
@@ -50,47 +50,47 @@ Detailed semantics, authority constraints, and state effects defined in Section 
 
 **Length:** Specifies length in bytes of payload field
 
-**Payload:** Message to be delivered, interpreted based on MSG_TYPE
+**Payload:** Message to be delivered, interpreted based on MSG_TYPE, up to maximum payload size of 255 bytes
 
-**CRC (Cyclic Redundancy Check):** 16-bit CRC-16/CCITT-FALSE calculated over Start, Type, Length and Payload fields for transmission error detection, transmitted MSB first
+**CRC (Cyclic Redundancy Check):** 16-bit CRC-16/CCITT-FALSE calculated over Start, Type, Length and Payload fields for transmission error detection, transmitted MSB first. Start byte included to detect false frame alignment. Receiver must resynchronize on Start regardless of CRC.
 
 ### 2.2 Message Type Definitions (Normative)
 
-The Arduino node is the sole authority for system state transitions. Command messages are advisory and may be rejected without response if preconditions are not met. No external node may directly force a state transition.
+The authoritative controller is the sole arbiter for system state transitions. Command messages are advisory and may be rejected without response if preconditions are not met. No external node may directly force a state transition.
 
 **MSG_ARM (0x01):**
-- Emitter: Pi 5 only
-- Receiver: Arduino only
+- Emitter: Non-authoritative node only
+- Receiver: Authoritative controller only
 - Preconditions: System state == SAFE
 - Effect: Transitions system to ARMING state
 - Failure behavior: Message shall be discarded if system state ≠ SAFE
 
 **MSG_DISARM (0x02):**
-- Emitter: Pi 5 only
-- Receiver: Arduino only
+- Emitter: Non-authoritative node only
+- Receiver: Authoritative controller only
 - Preconditions: System state == ARMED
 - Effect: Transitions system to SAFE state
-- Failure behavior: Message shall be discarded if system state == SAFE
+- Failure behavior: Message shall be discarded if preconditions are not met
 
 **MSG_STATUS_REQUEST (0x03):**
-- Emitter: Pi 5 only
-- Receiver: Arduino only
+- Emitter: Non-authoritative node only
+- Receiver: Authoritative controller only
 - Preconditions: None
-- Effect: Triggers response from Arduino containing current system state
+- Effect: Triggers response from authoritative controller containing current system state
 - Failure behavior: None
 
 **MSG_STATUS_RESPONSE (0x04):**
-- Emitter: Arduino only
-- Receiver: Pi 5 only
+- Emitter: Authoritative controller only
+- Receiver: Non-authoritative node only
 - Preconditions: None
 - Effect: None
 - Failure behavior: Responses shall be emitted only in direct response to a valid MSG_STATUS_REQUEST
 
 **MSG_HEARTBEAT (0x05):**
-- Emitter: Pi 5, Pi 0, or Arduino
-- Receiver: Pi 5, Pi 0, or Arduino
+- Emitter: Any node
+- Receiver: Any node
 - Preconditions: None
-- Effect: Resets inactivity countdown timer, re-establishing live connection
+- Effect: Resets local inactivity countdown timer, re-establishing local liveness, but must not influence global state or authority
 - Failure behavior: None
 
 ---
@@ -102,7 +102,7 @@ All messages include 16-bit CRC-16/CCITT-FALSE (polynomial 0x1021) calculated ov
 
 1. Recalculate CRC upon frame reception
 2. Compare calculated CRC against received CRC field
-3. Discard frame and increment error counter if mismatch detected
+3. Discard frame if mismatch detected
 
 ### 3.2 Discard semantics
 
@@ -125,7 +125,7 @@ All messages include 16-bit CRC-16/CCITT-FALSE (polynomial 0x1021) calculated ov
 
 ## 5.0 SECURITY CONSIDERATIONS
 
-This protocol currently provides no cryptographic authentication or confidentiality guarantees. Security mechanisms, including message authentication and asymmetric key exchange, will be defined in `04_security_threat_model.md` and integrated in a future revision. This revision does not attempt to mitigate spoofing, replay, or eavesdropping threats. Message authenticity and origin validation are explicitly out of scope for this revision.
+This protocol currently provides no cryptographic authentication or confidentiality guarantees. Security mechanisms, including message authentication and asymmetric key exchange, will be defined in `04_security_threat_model.md` and integrated in a future revision. This revision does not attempt to mitigate spoofing, replay, or eavesdropping threats. Role enforcement is strictly logical, not cryptographic. Message authenticity and origin validation are explicitly out of scope for this revision.
 
 ---
 
@@ -133,7 +133,11 @@ This protocol currently provides no cryptographic authentication or confidential
 
 |Version |Date       |Description   |
 |--------|-----------|--------------|
+|        |           |              |
+|--------|-----------|--------------|
 |0.1     |2026-01-16 |Initial Draft |
+|--------|-----------|--------------|
+|0.2     |2026-01-19 |Revised draft |
 
 ---
 

@@ -1,10 +1,11 @@
+#pragma once
 void system_state_init();
 
 // FSM Enum for system
-typedef enum {
-    SYS_SAFE,
-    SYS_ARMING,
-    SYS_ARMED,
-    SYS_DISARMED,
-    SYS_LOCKOUT
-} system_state_t;
+enum class control_authority_state_t {
+    CAS_SAFE,
+    CAS_ARMING,
+    CAS_ARMED,
+    CAS_DISARMED,
+    CAS_LOCKOUT
+};

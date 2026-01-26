@@ -1,6 +1,4 @@
 #include "frame_encoder.h"
-#include <cstddef>
-#include <cstdint>
 #include "frame.h"
 #include "transport_serial.h"
 #include "transport_wifi.h"
@@ -26,9 +24,9 @@ uint16_t crc16_ccitt_false(const uint8_t *data, size_t len) {
 
 void encode_frame(frame_t* f, msg_type_t type, const uint8_t* data, uint8_t len) {
     f->start = FRAME_START_BYTE;
-    f->type = type;
+    f->type = static_cast<uint8_t>(type);
     f->len = len;
     for (uint8_t i = 0; i < len; i++)
         f->payload[i] = data[i];
-    f->crc = crc16_ccitt_false((uint8_t*)f, 3 + len);
+    f->crc = crc16_ccitt_false(reinterpret_cast<uint8_t*>(f), 3 + len);
 }

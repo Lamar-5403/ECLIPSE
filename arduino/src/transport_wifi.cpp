@@ -6,7 +6,7 @@
 
 WiFiClient client;
 connection_status_t connection_status = connection_status_t::WIFI_UNINITIALIZED;
-
+constexpr unsigned long wifi_connection_timeout_ms = 10'000;
 long connection_attempt_time = 0;
 
 void transport_wifi_init() {
@@ -31,7 +31,7 @@ void transport_wifi_poll() {
         case connection_status_t::WIFI_CONNECTING:
             if (WiFi.status() == WL_CONNECTED && client.connected()) {
                 connection_status = connection_status_t::WIFI_CONNECTED;
-            } else if (millis() - connection_attempt_time >= 10000) {
+            } else if (millis() - connection_attempt_time >= wifi_connection_timeout_ms) {
                 WiFi.disconnect();
                 client.stop();
                 connection_status = connection_status_t::WIFI_FAILED;

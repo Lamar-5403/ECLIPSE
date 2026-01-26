@@ -1,6 +1,4 @@
 #include "system_controller.h"
-#include <cstddef>
-#include <cstdint>
 #include "frame.h"
 #include "frame_encoder.h"
 #include "system_state.h"

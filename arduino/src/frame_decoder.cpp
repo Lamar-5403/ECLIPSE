@@ -1,6 +1,6 @@
 #include "frame_decoder.h"
 #include "frame.h"
-#include "system_controller.h"
+#include "control_authority_controller.h"
 
 static frame_decoder_state_t decoder_state = frame_decoder_state_t::WAIT_START;
 static uint8_t payload_index = 0;

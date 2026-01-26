@@ -1,5 +1,5 @@
 #pragma once
-void system_state_init();
+void control_authority_state_init();
 
 // FSM Enum for system
 enum class control_authority_state_t {

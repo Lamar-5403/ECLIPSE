@@ -1,6 +1,6 @@
 # SYSTEM ARCHITECTURE
 
-Document Version: 0.2
+Document Version: 0.2  
 Status: Draft
 
 ---

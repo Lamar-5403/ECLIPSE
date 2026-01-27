@@ -10,6 +10,7 @@ constexpr unsigned long wifi_connection_timeout_ms = 10'000;
 long connection_attempt_time = 0;
 
 void transport_wifi_init() {
+    frame_decoder_reset();
     connection_status_t connection_status = connection_status_t::WIFI_CONNECTING;
 
     Serial.begin(115200);

@@ -4,10 +4,10 @@
 
 void transport_serial_init() {
     Serial.begin(115200); 
-    while (!Serial);
 }
 
 void transport_serial_poll() {
+    frame_decoder_reset();
     while (Serial.available() > 0) {
         frame_decoder_process_byte(Serial.read());
     }

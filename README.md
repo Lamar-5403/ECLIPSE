@@ -106,11 +106,12 @@ Formal documentation is located in the `/docs` directory:
 - `00_overview.md`
 - `01_requirements.md`
 - `02_architecture.md`
-- `03_comm_protocol.md`
-- `04_security_threat_model.md`
-- `05_test_plan.md`
-- `06_bom.md`
-- `07_deployment.md`
+- `03_lifecycle_and_state.md`
+- `04_comm_protocol.md`
+- `05_security_threat_model.md`
+- `06_test_plan.md`
+- `07_bom.md`
+- `08_deployment.md`
 
 ---
 
@@ -118,6 +119,7 @@ Formal documentation is located in the `/docs` directory:
 
 This project is under active development.
 Interfaces, protocols, and system behavior are subject to change.
+
 
 
 

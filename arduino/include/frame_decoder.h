@@ -1,5 +1,7 @@
 #pragma once
 #include "frame.h"
+#include "control_authority_controller.h"
+#include "crc16_ccitt_false.h"
 
 // Enum for finite state machine for decoder 
 enum class frame_decoder_state_t {

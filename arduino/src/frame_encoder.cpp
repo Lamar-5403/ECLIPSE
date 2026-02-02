@@ -1,7 +1,4 @@
 #include "frame_encoder.h"
-#include "frame.h"
-#include "transport_serial.h"
-#include "transport_wifi.h"
 
 void encode_frame(frame_t* f, msg_type_t type, const uint8_t* data, uint8_t len) {
     f->start = FRAME_START_BYTE;

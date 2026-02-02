@@ -15,7 +15,9 @@ def transport_serial_init():
 
 def transport_serial_poll():
     frame_decoder_reset()
-    # while 
+    while _ser.in_waiting > 0:
+        frame_decoder_process_byte(_ser.read())
+
 
 def transport_serial_send_byte(b: int):
     _ser.write(bytes([b]))

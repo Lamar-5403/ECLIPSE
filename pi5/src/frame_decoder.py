@@ -1,11 +1,13 @@
 from enum import Enum, auto
+from frame import crc16_ccitt_false
 from frame import (
     frame_t,
     START_OFS,
     MSG_TYPE_OFS,
     LEN_OFS,
     PAYLOAD_OFS,
-    CRC_OFS
+    CRC_OFS,
+    FRAME_WIRE_SIZE
 )
 
 class frame_decoder_state(Enum):
@@ -56,9 +58,12 @@ def frame_decoder_process_byte(b: int):
                 frame_t[CRC_OFS + 1] = b
                 crc_idx = 0
                 # calculate and compare crc16 value to validate frame
+                crc_calc = crc16_ccitt_false(frame_t[START_OFS : CRC_OFS])
+                if crc_calc == int.from_bytes(frame_t[FRAME_WIRE_SIZE-2 : FRAME_WIRE_SIZE]):
+                    pass #fully validated frame to system controller for interpretation
                 state = frame_decoder_state.WAIT_START
 
         case _:
             # Invalid decoder state unreachable outside of system level error
             # Send failure to authoritative controller to transisiton to FAULT
-            print("Uh oh")
+            pass

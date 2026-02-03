@@ -1,4 +1,12 @@
 from enum import Enum, auto
+from frame import (
+    frame_t,
+    START_OFS,
+    MSG_TYPE_OFS,
+    LEN_OFS,
+    PAYLOAD_OFS,
+    CRC_OFS
+)
 
 class frame_decoder_state(Enum):
     WAIT_START = auto()
@@ -8,36 +16,49 @@ class frame_decoder_state(Enum):
     READ_CRC = auto()
 
 global state 
-
 state = frame_decoder_state.WAIT_START
-
-# example parser
-match state:
-    case frame_decoder_state.WAIT_START:
-        # do something
-        print("Waiting for start...")
-    
-    case frame_decoder_state.READ_TYPE:
-        # do something
-        print("Waiting for type...")
-
-    case frame_decoder_state.READ_LEN:
-        # do something
-        print("Waiting for len...")
-
-    case frame_decoder_state.READ_PAYLOAD:
-        # do something
-        print("Waiting for payload...")
-
-    case frame_decoder_state.READ_CRC:
-        # do something
-        print("Waiting for crc...")
-
-    case _:
-        # do something
-        print("Waiting for something amazing i guess...")
 
 def frame_decoder_reset():
     # reset frame decoder FSM
-    global state
+    global state, payload_index, crc_calc, crc_idx
     state = frame_decoder_state.WAIT_START
+    payload_index = 0
+    crc_calc = 0
+    crc_idx = 0
+
+def frame_decoder_process_byte(b: int):
+    global state
+    match state:
+        case frame_decoder_state.WAIT_START:
+            if b == 0xAA:
+                frame_t[START_OFS] = b
+            state = frame_decoder_state.READ_TYPE
+        
+        case frame_decoder_state.READ_TYPE:
+            frame_t[MSG_TYPE_OFS] = b
+            state = frame_decoder_state.READ_LEN
+
+        case frame_decoder_state.READ_LEN:
+            frame_t[LEN_OFS] = b
+            state = frame_decoder_state.READ_PAYLOAD
+
+        case frame_decoder_state.READ_PAYLOAD:
+            frame_t[PAYLOAD_OFS + payload_index] = b
+            payload_index += 1
+            # if payload_index == len, move on to crc
+            state = frame_decoder_state.READ_CRC
+
+        case frame_decoder_state.READ_CRC:
+            if crc_idx == 0:
+                frame_t[CRC_OFS] = b
+                crc_idx += 1
+            else:
+                frame_t[CRC_OFS + 1] = b
+                crc_idx = 0
+                # calculate and compare crc16 value to validate frame
+                state = frame_decoder_state.WAIT_START
+
+        case _:
+            # Invalid decoder state unreachable outside of system level error
+            # Send failure to authoritative controller to transisiton to FAULT
+            print("Uh oh")

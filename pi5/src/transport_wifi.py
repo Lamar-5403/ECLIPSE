@@ -1,4 +1,6 @@
 import socket
+import select
+from frame_decoder import frame_decoder_reset, frame_decoder_process_byte
 
 def transport_wifi_init():
     global sock, connection, client_addr
@@ -8,6 +10,7 @@ def transport_wifi_init():
     sock.bind((server_addr))
     sock.listen(1)
     connection, client_addr = sock.accept()
+    frame_decoder_reset()
 
 
 def transport_wifi_poll():

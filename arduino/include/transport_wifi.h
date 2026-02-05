@@ -1,6 +1,11 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <Arduino.h>
+#include "WiFi.h"
+#include "config_wifi.h"
+#include "frame_decoder.h"
+#include "control_authority_controller.h"
 
 enum class connection_status_t {
     WIFI_UNINITIALIZED,

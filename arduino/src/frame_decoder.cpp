@@ -4,11 +4,13 @@ static frame_decoder_state_t decoder_state = frame_decoder_state_t::WAIT_START;
 static uint8_t payload_index = 0;
 static uint16_t crc_calc = 0;
 static frame_t rx_frame;
+static uint8_t crc_byte_idx = 0;
 
 void frame_decoder_reset() {
     decoder_state = frame_decoder_state_t::WAIT_START;
     payload_index = 0;
     crc_calc = 0;       // crc init vlaue
+    crc_byte_idx = 0;
 }
 
 void frame_decoder_process_byte(uint8_t b) {
@@ -40,14 +42,22 @@ void frame_decoder_process_byte(uint8_t b) {
             break;
 
         case frame_decoder_state_t::READ_CRC:
-            static uint8_t crc_byte_index = 0;
-            ((uint8_t*) &rx_frame.crc)[crc_byte_index++] = b;
-            if (crc_byte_index == 2) {
-                crc_byte_index = 0;
+
+            if (crc_byte_idx == 0) {
+                rx_frame.crc = b << 8;  // Store MSB 
+            } else {
+                rx_frame.crc |= b;  // LSB
+            }
+            crc_byte_idx++;
+
+            if (crc_byte_idx == 2) {
+                crc_byte_idx = 0;
+                crc_calc = crc16_ccitt_false(reinterpret_cast<const uint8_t*>(&rx_frame), (3 + rx_frame.len));
                 bool verified = (rx_frame.crc == crc_calc);
                 if (verified) {
                     system_controller_handle_frame(&rx_frame);
                 }
+
                 frame_decoder_reset();
             }
             break;

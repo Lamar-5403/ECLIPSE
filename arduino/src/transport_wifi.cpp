@@ -1,8 +1,4 @@
 #include "transport_wifi.h"
-#include <Arduino.h>
-#include "WiFi.h"
-#include "config_wifi.h"
-#include "frame_decoder.h"
 
 WiFiClient client;
 connection_status_t connection_status = connection_status_t::WIFI_UNINITIALIZED;
@@ -13,12 +9,8 @@ void transport_wifi_init() {
     frame_decoder_reset();
     connection_status_t connection_status = connection_status_t::WIFI_CONNECTING;
 
-    Serial.begin(115200);
-
     WiFi.begin(SSID, PASS);
     client.connect(IP, PORT);
-
-    Serial.println("Connecting to network...");
 
     // Record timestamp for timeout calculation
     connection_attempt_time = millis();
@@ -33,11 +25,8 @@ void transport_wifi_poll() {
             if (WiFi.status() == WL_CONNECTED && client.connected()) {
                 connection_status = connection_status_t::WIFI_CONNECTED;
             } else if (millis() - connection_attempt_time >= wifi_connection_timeout_ms) {
-                WiFi.disconnect();
-                client.stop();
                 connection_status = connection_status_t::WIFI_FAILED;
-                Serial.print("Network connection attempt timed out.");
-                // Report failure to system controller
+                report_status(connection_status);
                 return;
             } else {
                 // connection not yet established. return and wait for connection
@@ -48,9 +37,8 @@ void transport_wifi_poll() {
         case connection_status_t::WIFI_CONNECTED:
             if (WiFi.status() != WL_CONNECTED || !client.connected()) {
                 connection_status = connection_status_t::WIFI_DISCONNECTED;
-                WiFi.disconnect();
-                client.stop();
                 // Report dropped connection to system controller
+                report_status(connection_status);
                 return;
             } else {
                 // Drain available bytes to frame decoder
@@ -59,7 +47,6 @@ void transport_wifi_poll() {
                 }
                 return;
             }
-            // check if still connected, if not report dropped connection and return, if so drain bytes and return
             break;
 
         default:

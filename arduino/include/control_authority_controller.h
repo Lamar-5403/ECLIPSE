@@ -1,8 +1,8 @@
 #pragma once
-#include "frame.h"
 #include "frame_encoder.h"
 #include "control_authority_state.h"
 #include "life_cycle_state.h"
+#include "types.h"
 
 struct frame_t;
 

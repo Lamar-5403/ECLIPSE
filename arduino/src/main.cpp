@@ -1,20 +1,24 @@
 #include <Arduino.h>
-#include "transport_serial.h"
-#include "transport_wifi.h"
+#include "life_cycle_state.h"
 #include "control_authority_controller.h"
 #include "control_authority_state.h"
-#include "life_cycle_state.h"
-
-
-
+#include "frame_decoder.h"
+#include "transport_serial.h"
+#include "transport_wifi.h"
 
 void setup() {
+
+  Serial.begin(115200);
+
   life_cycle_state_init();
   control_authority_state_init();
+  frame_decoder_reset();
   transport_serial_init();
   transport_wifi_init();
 
   set_life_cycle_state(life_cycle_state_t::OPERATIONAL);
+
+  Serial.println("System Operational");
 }
 
 void loop() {

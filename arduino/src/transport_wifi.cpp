@@ -6,7 +6,6 @@ constexpr unsigned long wifi_connection_timeout_ms = 10'000;
 long connection_attempt_time = 0;
 
 void transport_wifi_init() {
-    frame_decoder_reset();
     connection_status_t connection_status = connection_status_t::WIFI_CONNECTING;
 
     WiFi.begin(SSID, PASS);
@@ -26,7 +25,7 @@ void transport_wifi_poll() {
                 connection_status = connection_status_t::WIFI_CONNECTED;
             } else if (millis() - connection_attempt_time >= wifi_connection_timeout_ms) {
                 connection_status = connection_status_t::WIFI_FAILED;
-                report_status(connection_status);
+                // callback hook
                 return;
             } else {
                 // connection not yet established. return and wait for connection
@@ -38,12 +37,13 @@ void transport_wifi_poll() {
             if (WiFi.status() != WL_CONNECTED || !client.connected()) {
                 connection_status = connection_status_t::WIFI_DISCONNECTED;
                 // Report dropped connection to system controller
-                report_status(connection_status);
+                // callback hook
                 return;
             } else {
                 // Drain available bytes to frame decoder
                 while (client.available() > 0) {
-                    frame_decoder_process_byte(client.read());
+                    //frame_decoder_process_byte(client.read());
+                    //callback hook?
                 }
                 return;
             }

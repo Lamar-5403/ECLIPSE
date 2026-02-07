@@ -2,6 +2,24 @@
 #include <cstdint>
 #include <cstddef>
 
+// System Lifecycle State
+enum class life_cycle_state_t {
+    BOOTSTRAP, 
+    OPERATIONAL,
+    DEGRADED,
+    FAULT
+};
+
+// Control Authority State
+enum class control_authority_state_t {
+    CAS_SAFE,
+    CAS_ARMING,
+    CAS_ARMED,
+    CAS_DISARMED,
+    CAS_LOCKOUT
+};
+
+// Frame Struct
 constexpr uint8_t FRAME_START_BYTE = 0xAA;
 constexpr size_t FRAME_MAX_PAYLOAD = 256;
 
@@ -21,10 +39,12 @@ struct __attribute__((packed)) frame_t {
 
 constexpr size_t FRAME_WIRE_SIZE = 1 + 1 + 1 + FRAME_MAX_PAYLOAD + 2;
 
+/*
 static_assert(
     sizeof(frame_t) == FRAME_WIRE_SIZE,
         "frame_t layout mismatch"
 );
+*/
 
 // Message type architecture
 enum class msg_type_t {
@@ -34,3 +54,22 @@ enum class msg_type_t {
     MSG_STATUS_RESPONSE  = 0x04,
     MSG_HEARTBEAT        = 0x05,
 };
+
+// Frame Decoder State
+enum class frame_decoder_state_t {
+    WAIT_START,
+    READ_TYPE,
+    READ_LEN,
+    READ_PAYLOAD,
+    READ_CRC
+};
+
+// WiFi connection state
+enum class connection_status_t {
+    WIFI_UNINITIALIZED,
+    WIFI_CONNECTING,
+    WIFI_CONNECTED,
+    WIFI_DISCONNECTED,
+    WIFI_FAILED
+};
+

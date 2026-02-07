@@ -1,15 +1,15 @@
 #include "transport_serial.h"
 #include <Arduino.h>
-#include "frame_decoder.h"
 
 void transport_serial_init() {
     Serial.begin(115200); 
 }
 
 void transport_serial_poll() {
-    frame_decoder_reset();
+    //frame_decoder_reset();
     while (Serial.available() > 0) {
-        frame_decoder_process_byte(Serial.read());
+        //frame_decoder_process_byte(Serial.read());
+        //callback hook
     }
 }
 

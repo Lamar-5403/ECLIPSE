@@ -1,16 +1,7 @@
 #pragma once
-#include "frame.h"
 #include "control_authority_controller.h"
 #include "crc16_ccitt_false.h"
-
-// Enum for finite state machine for decoder 
-enum class frame_decoder_state_t {
-    WAIT_START,
-    READ_TYPE,
-    READ_LEN,
-    READ_PAYLOAD,
-    READ_CRC
-};
+#include "types.h"
 
 void frame_decoder_reset();
 void frame_decoder_process_byte(uint8_t);

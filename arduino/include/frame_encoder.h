@@ -1,7 +1,6 @@
 #pragma once
-#include <cstddef>
 #include <cstdint>
-#include "frame.h"
+#include "types.h"
 #include "transport_serial.h"
 #include "transport_wifi.h"
 #include "crc16_ccitt_false.h"

@@ -9,7 +9,7 @@ static uint8_t crc_byte_idx = 0;
 void frame_decoder_reset() {
     decoder_state = frame_decoder_state_t::WAIT_START;
     payload_index = 0;
-    crc_calc = 0;       // crc init vlaue
+    crc_calc = 0;       // crc init value
     crc_byte_idx = 0;
 }
 

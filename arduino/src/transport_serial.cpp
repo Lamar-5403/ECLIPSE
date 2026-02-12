@@ -1,6 +1,12 @@
 #include "transport_serial.h"
 #include <Arduino.h>
 
+static process_byte_cb_t process_byte_cb = nullptr;
+
+void transport_serial_register_process_byte_cb(process_byte_cb_t cb) {
+    process_byte_cb = cb;
+}
+
 void transport_serial_init() {
     Serial.begin(115200); 
 }
@@ -8,8 +14,10 @@ void transport_serial_init() {
 void transport_serial_poll() {
     //frame_decoder_reset();
     while (Serial.available() > 0) {
-        //frame_decoder_process_byte(Serial.read());
         //callback hook
+        if (process_byte_cb) {
+            process_byte_cb(Serial.read());
+        }
     }
 }
 

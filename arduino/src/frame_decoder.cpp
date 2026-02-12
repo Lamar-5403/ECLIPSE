@@ -1,10 +1,24 @@
 #include "frame_decoder.h"
+#include "crc16_ccitt_false.h"
+#include "transport_wifi.h"
+#include "transport_serial.h"
 
 static frame_decoder_state_t decoder_state = frame_decoder_state_t::WAIT_START;
 static uint8_t payload_index = 0;
 static uint16_t crc_calc = 0;
 static frame_t rx_frame;
 static uint8_t crc_byte_idx = 0;
+static handle_frame_cb_t handle_frame = nullptr;
+
+void frame_decoder_register_handle_frame_cb(handle_frame_cb_t cb) {
+    handle_frame = cb;
+}
+
+void frame_decoder_init() {
+    frame_decoder_reset();
+    transport_wifi_register_process_byte_cb(frame_decoder_process_byte_cb);
+    transport_serial_register_process_byte_cb(frame_decoder_process_byte_cb);
+}
 
 void frame_decoder_reset() {
     decoder_state = frame_decoder_state_t::WAIT_START;
@@ -13,7 +27,7 @@ void frame_decoder_reset() {
     crc_byte_idx = 0;
 }
 
-void frame_decoder_process_byte(uint8_t b) {
+void frame_decoder_process_byte_cb(uint8_t b) {
     switch (decoder_state) {
         case frame_decoder_state_t::WAIT_START:
             if (b == FRAME_START_BYTE) {
@@ -55,7 +69,10 @@ void frame_decoder_process_byte(uint8_t b) {
                 crc_calc = crc16_ccitt_false(reinterpret_cast<const uint8_t*>(&rx_frame), (3 + rx_frame.len));
                 bool verified = (rx_frame.crc == crc_calc);
                 if (verified) {
-                    system_controller_handle_frame(&rx_frame);
+                    //callback hook
+                    if (handle_frame) {
+                        handle_frame(&rx_frame);
+                    }
                 }
 
                 frame_decoder_reset();

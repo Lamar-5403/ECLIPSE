@@ -3,10 +3,21 @@
 WiFiClient client;
 connection_status_t connection_status = connection_status_t::WIFI_UNINITIALIZED;
 constexpr unsigned long wifi_connection_timeout_ms = 10'000;
-long connection_attempt_time = 0;
+unsigned long connection_attempt_time = 0;
+
+static wifi_status_cb_t status_cb = nullptr;
+static process_byte_cb_t process_byte_cb = nullptr;
+
+void transport_wifi_register_status_cb(wifi_status_cb_t cb) {
+    status_cb = cb;
+}
+
+void transport_wifi_register_process_byte_cb(process_byte_cb_t cb) {
+    process_byte_cb = cb;
+}
 
 void transport_wifi_init() {
-    connection_status_t connection_status = connection_status_t::WIFI_CONNECTING;
+    connection_status = connection_status_t::WIFI_CONNECTING;
 
     WiFi.begin(SSID, PASS);
     client.connect(IP, PORT);
@@ -26,28 +37,34 @@ void transport_wifi_poll() {
             } else if (millis() - connection_attempt_time >= wifi_connection_timeout_ms) {
                 connection_status = connection_status_t::WIFI_FAILED;
                 // callback hook
+                if (status_cb) {
+                    status_cb(connection_status);
+                }
                 return;
             } else {
                 // connection not yet established. return and wait for connection
                 return;
             }
-            break;
     
         case connection_status_t::WIFI_CONNECTED:
             if (WiFi.status() != WL_CONNECTED || !client.connected()) {
                 connection_status = connection_status_t::WIFI_DISCONNECTED;
                 // Report dropped connection to system controller
                 // callback hook
+                if (status_cb) {
+                    status_cb(connection_status);
+                }
                 return;
             } else {
                 // Drain available bytes to frame decoder
                 while (client.available() > 0) {
-                    //frame_decoder_process_byte(client.read());
-                    //callback hook?
+                    //callback hook
+                    if (process_byte_cb) {
+                        process_byte_cb(client.read());
+                    }
                 }
                 return;
             }
-            break;
 
         default:
             // system either uninitialized or has not been or is no longer connected, requiring system controller intervention

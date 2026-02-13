@@ -2,9 +2,14 @@
 #include <Arduino.h>
 
 static process_byte_cb_t process_byte_cb = nullptr;
+static frame_decoder_reset_cb_t frame_decoder_reset_cb = nullptr;
 
 void transport_serial_register_process_byte_cb(process_byte_cb_t cb) {
     process_byte_cb = cb;
+}
+
+void transport_serial_register_decoder_reset_cb(frame_decoder_reset_cb_t cb) {
+    frame_decoder_reset_cb = cb;
 }
 
 void transport_serial_init() {
@@ -12,7 +17,9 @@ void transport_serial_init() {
 }
 
 void transport_serial_poll() {
-    //frame_decoder_reset();
+    if (frame_decoder_reset_cb) {
+        frame_decoder_reset_cb();
+    }
     while (Serial.available() > 0) {
         //callback hook
         if (process_byte_cb) {

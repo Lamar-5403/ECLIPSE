@@ -7,6 +7,7 @@ unsigned long connection_attempt_time = 0;
 
 static wifi_status_cb_t status_cb = nullptr;
 static process_byte_cb_t process_byte_cb = nullptr;
+static frame_decoder_reset_cb_t frame_decoder_reset_cb = nullptr;
 
 void transport_wifi_register_status_cb(wifi_status_cb_t cb) {
     status_cb = cb;
@@ -14,6 +15,10 @@ void transport_wifi_register_status_cb(wifi_status_cb_t cb) {
 
 void transport_wifi_register_process_byte_cb(process_byte_cb_t cb) {
     process_byte_cb = cb;
+}
+
+void transport_wifi_register_decoder_reset_cb(frame_decoder_reset_cb_t cb) {
+    frame_decoder_reset_cb = cb;
 }
 
 void transport_wifi_init() {
@@ -57,6 +62,9 @@ void transport_wifi_poll() {
                 return;
             } else {
                 // Drain available bytes to frame decoder
+                if (frame_decoder_reset_cb) {
+                    frame_decoder_reset_cb();
+                }
                 while (client.available() > 0) {
                     //callback hook
                     if (process_byte_cb) {

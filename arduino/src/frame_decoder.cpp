@@ -18,6 +18,8 @@ void frame_decoder_init() {
     frame_decoder_reset();
     transport_wifi_register_process_byte_cb(frame_decoder_process_byte_cb);
     transport_serial_register_process_byte_cb(frame_decoder_process_byte_cb);
+    transport_serial_register_decoder_reset_cb(frame_decoder_reset);
+    transport_wifi_register_decoder_reset_cb(frame_decoder_reset);
 }
 
 void frame_decoder_reset() {

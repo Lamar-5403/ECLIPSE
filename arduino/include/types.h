@@ -39,12 +39,10 @@ struct __attribute__((packed)) frame_t {
 
 constexpr size_t FRAME_WIRE_SIZE = 1 + 1 + 1 + FRAME_MAX_PAYLOAD + 2;
 
-/*
 static_assert(
     sizeof(frame_t) == FRAME_WIRE_SIZE,
         "frame_t layout mismatch"
 );
-*/
 
 // Message type architecture
 enum class msg_type_t {

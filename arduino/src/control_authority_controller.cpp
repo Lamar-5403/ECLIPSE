@@ -2,7 +2,7 @@
 #include "transport_wifi.h"
 #include "frame_decoder.h"
 
-void system_controller_init() {
+void control_authority_controller_init() {
     transport_wifi_register_status_cb(system_controller_wifi_status_cb);
     frame_decoder_register_handle_frame_cb(system_controller_handle_frame_cb);
 }

@@ -12,7 +12,8 @@ void setup() {
 
   life_cycle_state_init();
   control_authority_state_init();
-  frame_decoder_reset();
+  control_authority_controller_init();
+  frame_decoder_init();
   transport_serial_init();
   transport_wifi_init();
 
@@ -24,4 +25,6 @@ void setup() {
 void loop() {
   transport_serial_poll();
   transport_wifi_poll();
+
+  // Serial.println("Nothing yet...");
 }

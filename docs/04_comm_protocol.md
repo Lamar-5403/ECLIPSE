@@ -1,4 +1,8 @@
 # COMMUNICATION PROTOCOL SPECIFICATION
+
+Document Version: 0.1  
+Status: Draft  
+
 **Framed Communication Protocol for Distributed Control Systems**
 
 ---

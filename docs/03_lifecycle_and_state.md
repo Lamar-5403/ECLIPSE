@@ -178,7 +178,7 @@ For each state:
 
 ## 6.0 AUTHORITY AND ENFORCEMENT
 
-- Only the authoritative controller may mutate CAS or SLS
+- Only authoritative controller may mutate CAS or SLS
 - Non-authoritative nodes may observe but never infer state
 - State identity ambiguity results in denial
 

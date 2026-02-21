@@ -25,6 +25,4 @@ void setup() {
 void loop() {
   transport_serial_poll();
   transport_wifi_poll();
-
-  // Serial.println("Nothing yet...");
 }

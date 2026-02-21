@@ -41,7 +41,7 @@ void frame_decoder_process_byte_cb(uint8_t b) {
             break;
         
         case frame_decoder_state_t::READ_TYPE:
-            rx_frame.type = b;
+            rx_frame.type = static_cast<msg_type_t>(b);
             decoder_state = frame_decoder_state_t::READ_LEN;
             break;
 
@@ -68,7 +68,7 @@ void frame_decoder_process_byte_cb(uint8_t b) {
 
             if (crc_byte_idx == 2) {
                 crc_byte_idx = 0;
-                crc_calc = crc16_ccitt_false(reinterpret_cast<const uint8_t*>(&rx_frame), (3 + rx_frame.len));
+                crc_calc = crc16_ccitt_false(reinterpret_cast<const uint8_t*>(&rx_frame.type), (2 + rx_frame.len));
                 bool verified = (rx_frame.crc == crc_calc);
                 if (verified) {
                     //callback hook

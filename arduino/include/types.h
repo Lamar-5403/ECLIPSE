@@ -25,7 +25,7 @@ constexpr size_t FRAME_MAX_PAYLOAD = 256;
 
 struct __attribute__((packed)) frame_t {
     uint8_t start;
-    uint8_t type;
+    msg_type_t type;
     uint8_t len;
     uint8_t payload[FRAME_MAX_PAYLOAD];
     uint16_t crc;
@@ -45,7 +45,7 @@ static_assert(
 );
 
 // Message type architecture
-enum class msg_type_t {
+enum class msg_type_t : uint8_t {
     MSG_ARM              = 0x01,
     MSG_DISARM           = 0x02,
     MSG_STATUS_REQUEST   = 0x03,

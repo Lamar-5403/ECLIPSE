@@ -8,4 +8,8 @@ void life_cycle_state_init() {
 
 void set_life_cycle_state(life_cycle_state_t new_state) {
     system_lifecycle = new_state;
+
+    if (system_lifecycle == life_cycle_state_t::FAULT) {
+        // set control authority state to SAFE to enforce lockout
+    }
 }

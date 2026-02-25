@@ -22,21 +22,15 @@ def transport_serial_register_decoder_reset_cb(cb):
 def transport_serial_init():
     global _ser
     _ser = serial.Serial(arduino_port_discovery(), 115200, timeout=1)
-    _ser.flush()
 
 def transport_serial_poll():
     if _decoder_reset_cb is not None:
         _decoder_reset_cb()
 
     while _ser.in_waiting > 0:
-        b = _ser.read(1)
-        if not b:
-            break
-        byteval = b[0]
         if _process_byte_cb is not None:
-            _process_byte_cb(byteval)
+            _process_byte_cb(_ser.read(1))
 
 
 def transport_serial_send_byte(b: int):
     _ser.write(bytes([b]))
-    _ser.flush()

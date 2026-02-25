@@ -12,6 +12,11 @@ from frame import (
     FRAME_WIRE_SIZE
 )
 
+_handle_frame_cb = None
+
+def frame_decoder_register_handle_frame_cb(cb):
+    _handle_frame_cb = cb
+
 class frame_decoder_state(Enum):
     WAIT_START = auto()
     READ_TYPE = auto()
@@ -69,7 +74,8 @@ def frame_decoder_process_byte(b: int):
                 # calculate and compare crc16 value to validate frame
                 crc_calc = crc16_ccitt_false(frame_t[START_OFS : PAYLOAD_OFS + frame_t[LEN_OFS]])
                 if crc_calc == int.from_bytes(frame_t[FRAME_WIRE_SIZE-2 : FRAME_WIRE_SIZE]):
-                    pass #fully validated frame to system controller for interpretation
+                    if _handle_frame_cb is not None:
+                        _handle_frame_cb(frame_t)
                 state = frame_decoder_state.WAIT_START
 
         case _:

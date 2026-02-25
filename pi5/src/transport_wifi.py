@@ -3,6 +3,7 @@ import select
 
 _process_byte_cb = None
 _decoder_reset_cb = None
+_status_cb = None
 
 def transport_wifi_register_process_byte_cb(cb):
     global _process_byte_cb
@@ -11,6 +12,9 @@ def transport_wifi_register_process_byte_cb(cb):
 def transport_wifi_register_decoder_reset_cb(cb):
     global _decoder_reset_cb
     _decoder_reset_cb = cb
+
+def transport_wifi_register_status_cb(cb):
+    _status_cb = cb
 
 def transport_wifi_init():
     global sock, connection, client_addr
@@ -33,12 +37,11 @@ def transport_wifi_poll():
     
     data = connection.recv(1600)
     if not data:
-        #connection.close()
         return
     
     if _process_byte_cb is not None:
         for byte in data:
             _process_byte_cb(byte)
 
-def transport_wifi_write_bytes(frame: bytes):
-    connection.sendall(frame)
+def transport_wifi_write_bytes(b: int):
+    connection.send(bytes[b])

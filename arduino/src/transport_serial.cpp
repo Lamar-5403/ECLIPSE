@@ -21,7 +21,6 @@ void transport_serial_poll() {
         frame_decoder_reset_cb();
     }
     while (Serial.available() > 0) {
-        //callback hook
         if (process_byte_cb) {
             process_byte_cb(Serial.read());
         }

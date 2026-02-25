@@ -1,6 +1,16 @@
 import socket
 import select
-# from frame_decoder import frame_decoder_reset, frame_decoder_process_byte
+
+_process_byte_cb = None
+_decoder_reset_cb = None
+
+def transport_wifi_register_process_byte_cb(cb):
+    global _process_byte_cb
+    _process_byte_cb = cb
+
+def transport_wifi_register_decoder_reset_cb(cb):
+    global _decoder_reset_cb
+    _decoder_reset_cb = cb
 
 def transport_wifi_init():
     global sock, connection, client_addr
@@ -10,7 +20,9 @@ def transport_wifi_init():
     sock.bind((server_addr))
     sock.listen(1)
     connection, client_addr = sock.accept()
-    # frame_decoder_reset()
+    
+    if _decoder_reset_cb is not None:
+        _decoder_reset_cb()
 
 
 def transport_wifi_poll():
@@ -24,8 +36,9 @@ def transport_wifi_poll():
         #connection.close()
         return
     
-    for byte in data:
-        pass # frame_decoder_process_byte(byte)
+    if _process_byte_cb is not None:
+        for byte in data:
+            _process_byte_cb(byte)
 
 def transport_wifi_write_bytes(frame: bytes):
     connection.sendall(frame)

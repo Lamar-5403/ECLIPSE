@@ -1,5 +1,7 @@
 from enum import Enum, auto
 from frame import crc16_ccitt_false
+import transport_serial
+import transport_wifi
 from frame import (
     frame_t,
     START_OFS,
@@ -20,6 +22,13 @@ class frame_decoder_state(Enum):
 global state 
 state = frame_decoder_state.WAIT_START
 
+def frame_decoder_init():
+    frame_decoder_reset()
+    transport_serial.transport_serial_register_decoder_reset_cb(frame_decoder_reset)
+    transport_serial.transport_serial_register_process_byte_cb(frame_decoder_process_byte)
+    transport_wifi.transport_wifi_register_process_byte_cb(frame_decoder_process_byte)
+    transport_wifi.transport_wifi_register_decoder_reset_cb(frame_decoder_reset)
+
 def frame_decoder_reset():
     # reset frame decoder FSM
     global state, payload_index, crc_calc, crc_idx
@@ -29,7 +38,7 @@ def frame_decoder_reset():
     crc_idx = 0
 
 def frame_decoder_process_byte(b: int):
-    global state
+    global state, payload_index, crc_idx, crc_calc
     match state:
         case frame_decoder_state.WAIT_START:
             if b == 0xAA:
@@ -58,7 +67,7 @@ def frame_decoder_process_byte(b: int):
                 frame_t[CRC_OFS + 1] = b
                 crc_idx = 0
                 # calculate and compare crc16 value to validate frame
-                crc_calc = crc16_ccitt_false(frame_t[START_OFS : CRC_OFS])
+                crc_calc = crc16_ccitt_false(frame_t[START_OFS : PAYLOAD_OFS + frame_t[LEN_OFS]])
                 if crc_calc == int.from_bytes(frame_t[FRAME_WIRE_SIZE-2 : FRAME_WIRE_SIZE]):
                     pass #fully validated frame to system controller for interpretation
                 state = frame_decoder_state.WAIT_START

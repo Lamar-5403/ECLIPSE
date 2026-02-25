@@ -15,4 +15,4 @@ void transport_wifi_register_decoder_reset_cb(frame_decoder_reset_cb_t cb);
 
 void transport_wifi_init();
 void transport_wifi_poll();
-void transport_wifi_send_byte(const uint8_t*, size_t);
+void transport_wifi_send_byte(const uint8_t);

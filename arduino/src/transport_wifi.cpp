@@ -80,6 +80,6 @@ void transport_wifi_poll() {
     }
 }
 
-void transport_wifi_send_byte(const uint8_t* byte, size_t size) {
-    client.write(byte, size);
+void transport_wifi_send_byte(const uint8_t byte) {
+    client.write(byte);
 }

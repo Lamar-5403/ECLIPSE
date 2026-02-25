@@ -1,6 +1,5 @@
 import serial
 from serial.tools import list_ports
-# from frame_decoder import frame_decoder_reset, frame_decoder_process_byte
 
 def arduino_port_discovery():
     for port in list_ports.comports():
@@ -8,15 +7,34 @@ def arduino_port_discovery():
             return port.device
     raise RuntimeError("Arduino port not found")
 
+_process_byte_cb = None
+_decoder_reset_cb = None
+_ser = None
+
+def transport_serial_register_process_byte_cb(cb):
+    global _process_byte_cb
+    _process_byte_cb = cb
+
+def transport_serial_register_decoder_reset_cb(cb):
+    global _decoder_reset_cb
+    _decoder_reset_cb = cb
+
 def transport_serial_init():
     global _ser
     _ser = serial.Serial(arduino_port_discovery(), 115200, timeout=1)
     _ser.flush()
 
 def transport_serial_poll():
-    # frame_decoder_reset()
+    if _decoder_reset_cb is not None:
+        _decoder_reset_cb()
+
     while _ser.in_waiting > 0:
-        pass #frame_decoder_process_byte(_ser.read())
+        b = _ser.read(1)
+        if not b:
+            break
+        byteval = b[0]
+        if _process_byte_cb is not None:
+            _process_byte_cb(byteval)
 
 
 def transport_serial_send_byte(b: int):

@@ -19,6 +19,15 @@ enum class control_authority_state_t {
     CAS_LOCKOUT
 };
 
+// Message type architecture
+enum class msg_type_t : uint8_t {
+    MSG_ARM              = 0x01,
+    MSG_DISARM           = 0x02,
+    MSG_STATUS_REQUEST   = 0x03,
+    MSG_STATUS_RESPONSE  = 0x04,
+    MSG_HEARTBEAT        = 0x05,
+};
+
 // Frame Struct
 constexpr uint8_t FRAME_START_BYTE = 0xAA;
 constexpr size_t FRAME_MAX_PAYLOAD = 256;
@@ -43,15 +52,6 @@ static_assert(
     sizeof(frame_t) == FRAME_WIRE_SIZE,
         "frame_t layout mismatch"
 );
-
-// Message type architecture
-enum class msg_type_t : uint8_t {
-    MSG_ARM              = 0x01,
-    MSG_DISARM           = 0x02,
-    MSG_STATUS_REQUEST   = 0x03,
-    MSG_STATUS_RESPONSE  = 0x04,
-    MSG_HEARTBEAT        = 0x05,
-};
 
 // Frame Decoder State
 enum class frame_decoder_state_t {

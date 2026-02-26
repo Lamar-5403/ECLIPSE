@@ -11,8 +11,8 @@ void calc_serialized_buf(const frame_t* f, uint8_t* out) {
     for (int i = 0; i < f->len; i++)
         out [3 + i] = f->payload[i];
 
-    out[3 + f->len] = static_cast<uint8_t>(f->crc & 0xFF);
-    out[3 + f->len + 1] = static_cast<uint8_t>((f->crc >> 8) & 0xFF);
+    out[3 + f->len] = static_cast<uint8_t>((f->crc >> 8) & 0xFF);   // MSB
+    out[3 + f->len + 1] = static_cast<uint8_t>(f->crc & 0xFF);      // LSB
 }
 
 void frame_encode(frame_t* f, msg_type_t type, const uint8_t* data, uint8_t len) {

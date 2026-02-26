@@ -1,5 +1,4 @@
-from enum import Enum, auto
-from frame import crc16_ccitt_false
+from frame import crc16_ccitt_false, frame_decoder_state
 import transport_serial
 import transport_wifi
 from frame import (
@@ -9,20 +8,15 @@ from frame import (
     LEN_OFS,
     PAYLOAD_OFS,
     CRC_OFS,
-    FRAME_WIRE_SIZE
+    FRAME_WIRE_SIZE,
+    FRAME_START_BYTE
 )
 
 _handle_frame_cb = None
 
 def frame_decoder_register_handle_frame_cb(cb):
+    global _handle_frame_cb
     _handle_frame_cb = cb
-
-class frame_decoder_state(Enum):
-    WAIT_START = auto()
-    READ_TYPE = auto()
-    READ_LEN = auto()
-    READ_PAYLOAD = auto()
-    READ_CRC = auto()
 
 global state 
 state = frame_decoder_state.WAIT_START
@@ -46,9 +40,11 @@ def frame_decoder_process_byte(b: int):
     global state, payload_index, crc_idx, crc_calc
     match state:
         case frame_decoder_state.WAIT_START:
-            if b == 0xAA:
-                frame_t[START_OFS] = b
-            state = frame_decoder_state.READ_TYPE
+            if b != FRAME_START_BYTE:
+                return
+            else:
+                frame_t[START_OFS] = FRAME_START_BYTE
+                state = frame_decoder_state.READ_TYPE
         
         case frame_decoder_state.READ_TYPE:
             frame_t[MSG_TYPE_OFS] = b
@@ -56,13 +52,15 @@ def frame_decoder_process_byte(b: int):
 
         case frame_decoder_state.READ_LEN:
             frame_t[LEN_OFS] = b
-            state = frame_decoder_state.READ_PAYLOAD
+            state = frame_decoder_state.READ_CRC if b == 0 else frame_decoder_state.READ_PAYLOAD
 
         case frame_decoder_state.READ_PAYLOAD:
             frame_t[PAYLOAD_OFS + payload_index] = b
             payload_index += 1
-            # if payload_index == len, move on to crc
-            state = frame_decoder_state.READ_CRC
+            if payload_index == frame_t[LEN_OFS]:
+                state = frame_decoder_state.READ_CRC
+            else:
+                return
 
         case frame_decoder_state.READ_CRC:
             if crc_idx == 0:
@@ -72,11 +70,12 @@ def frame_decoder_process_byte(b: int):
                 frame_t[CRC_OFS + 1] = b
                 crc_idx = 0
                 # calculate and compare crc16 value to validate frame
-                crc_calc = crc16_ccitt_false(frame_t[START_OFS : PAYLOAD_OFS + frame_t[LEN_OFS]])
-                if crc_calc == int.from_bytes(frame_t[FRAME_WIRE_SIZE-2 : FRAME_WIRE_SIZE]):
+                crc_calc = crc16_ccitt_false(frame_t[START_OFS : START_OFS + 3 + frame_t[LEN_OFS]])
+                stored_crc = (frame_t[CRC_OFS] << 8) | frame_t[CRC_OFS + 1]
+                if crc_calc == stored_crc:
                     if _handle_frame_cb is not None:
                         _handle_frame_cb(frame_t)
-                state = frame_decoder_state.WAIT_START
+                frame_decoder_reset()
 
         case _:
             # Invalid decoder state unreachable outside of system level error

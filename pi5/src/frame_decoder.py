@@ -1,4 +1,5 @@
-from frame import crc16_ccitt_false, frame_decoder_state
+from frame import frame_decoder_state
+from crc16_ccitt_false import crc16_ccitt_false
 import transport_serial
 import transport_wifi
 from frame import (

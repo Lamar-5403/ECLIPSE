@@ -1,3 +1,5 @@
+#define frame_layer_unit_test 1
+
 #include "../../include/types.h"
 #include "../../include/frame_decoder.h"
 #include "../../include/frame_encoder.h"

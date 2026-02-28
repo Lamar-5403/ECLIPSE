@@ -1,5 +1,10 @@
 import sys
-sys.path.append(r"C:\git\ECLIPSE\pi5\src")
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+
+sys.path.append(str(SRC))
 
 import frame
 import frame_encoder

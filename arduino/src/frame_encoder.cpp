@@ -1,6 +1,9 @@
-#include "frame_encoder.h"
+#if !defined(frame_layer_unit_test)
 #include "transport_serial.h"
 #include "transport_wifi.h"
+#endif
+
+#include "frame_encoder.h"
 #include "crc16_ccitt_false.h"
 
 void calc_serialized_buf(const frame_t* f, uint8_t* out) {
@@ -24,6 +27,7 @@ void frame_encode(frame_t* f, msg_type_t type, const uint8_t* data, uint8_t len)
     f->crc = crc16_ccitt_false(reinterpret_cast<uint8_t*>(f), 3 + len);
 }
 
+#if !defined(frame_layer_unit_test)
 void send_frame_serial(frame_t* f) {
     uint8_t total_len = 3 + f->len + 2;
     uint8_t buf[5 + FRAME_MAX_PAYLOAD];
@@ -43,3 +47,4 @@ void send_frame_wifi(frame_t* f) {
     for (int i = 0; i < total_len; i++)
         transport_wifi_send_byte(buf[i]);
 }
+#endif

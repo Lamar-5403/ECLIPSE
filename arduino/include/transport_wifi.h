@@ -1,11 +1,7 @@
 #pragma once
-
-#if ARDUINO
+#include <cstdint>
 #include <Arduino.h>
 #include "Wifi.h"
-#endif
-
-#include <cstdint>
 #include "config_wifi.h"
 #include "types.h"
 

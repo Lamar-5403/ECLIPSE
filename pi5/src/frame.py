@@ -4,8 +4,8 @@ global FRAME_START_BYTE, FRAME_MAX_PAYLOAD, FRAME_WIRE_SIZE, frame_t, frame_view
 FRAME_START_BYTE = 0xAA
 FRAME_MAX_PAYLOAD = 256
 FRAME_WIRE_SIZE = 1 + 1 + 1 + FRAME_MAX_PAYLOAD + 2
-frame_t = bytearray(FRAME_WIRE_SIZE)
-frame_view = memoryview(frame_t)
+# frame_t = bytearray(FRAME_WIRE_SIZE)
+# frame_view = memoryview(frame_t)
 
 START_OFS = 0
 MSG_TYPE_OFS = 1

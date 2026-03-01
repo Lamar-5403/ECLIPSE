@@ -21,7 +21,7 @@ def transport_serial_register_decoder_reset_cb(cb):
 
 def transport_serial_init():
     global _ser
-    _ser = serial.Serial(arduino_port_discovery(), 115200, timeout=1)
+    _ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
 
 def transport_serial_poll():
     if _decoder_reset_cb is not None:

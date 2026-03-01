@@ -3,7 +3,6 @@ from crc16_ccitt_false import crc16_ccitt_false
 import transport_serial
 import transport_wifi
 from frame import (
-    frame_t,
     START_OFS,
     MSG_TYPE_OFS,
     LEN_OFS,
@@ -12,6 +11,8 @@ from frame import (
     FRAME_WIRE_SIZE,
     FRAME_START_BYTE
 )
+
+rx_frame = [0] * FRAME_WIRE_SIZE
 
 _handle_frame_cb = None
 
@@ -44,38 +45,38 @@ def frame_decoder_process_byte(b: int):
             if b != FRAME_START_BYTE:
                 return
             else:
-                frame_t[START_OFS] = FRAME_START_BYTE
+                rx_frame[START_OFS] = FRAME_START_BYTE
                 state = frame_decoder_state.READ_TYPE
         
         case frame_decoder_state.READ_TYPE:
-            frame_t[MSG_TYPE_OFS] = b
+            rx_frame[MSG_TYPE_OFS] = b
             state = frame_decoder_state.READ_LEN
 
         case frame_decoder_state.READ_LEN:
-            frame_t[LEN_OFS] = b
+            rx_frame[LEN_OFS] = b
             state = frame_decoder_state.READ_CRC if b == 0 else frame_decoder_state.READ_PAYLOAD
 
         case frame_decoder_state.READ_PAYLOAD:
-            frame_t[PAYLOAD_OFS + payload_index] = b
+            rx_frame[PAYLOAD_OFS + payload_index] = b
             payload_index += 1
-            if payload_index == frame_t[LEN_OFS]:
+            if payload_index == rx_frame[LEN_OFS]:
                 state = frame_decoder_state.READ_CRC
             else:
                 return
 
         case frame_decoder_state.READ_CRC:
             if crc_idx == 0:
-                frame_t[CRC_OFS] = b
+                rx_frame[CRC_OFS] = b
                 crc_idx += 1
             else:
-                frame_t[CRC_OFS + 1] = b
+                rx_frame[CRC_OFS + 1] = b
                 crc_idx = 0
                 # calculate and compare crc16 value to validate frame
-                crc_calc = crc16_ccitt_false(frame_t[START_OFS : START_OFS + 3 + frame_t[LEN_OFS]])
-                stored_crc = (frame_t[CRC_OFS] << 8) | frame_t[CRC_OFS + 1]
+                crc_calc = crc16_ccitt_false(rx_frame[START_OFS : START_OFS + 3 + rx_frame[LEN_OFS]])
+                stored_crc = (rx_frame[CRC_OFS] << 8) | rx_frame[CRC_OFS + 1]
                 if crc_calc == stored_crc:
                     if _handle_frame_cb is not None:
-                        _handle_frame_cb(frame_t)
+                        _handle_frame_cb(rx_frame)
                 frame_decoder_reset()
 
         case _:

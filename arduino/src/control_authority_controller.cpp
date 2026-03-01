@@ -1,5 +1,6 @@
 #include "control_authority_controller.h"
 #include "transport_wifi.h"
+#include "transport_serial.h"
 #include "frame_decoder.h"
 #include "types.h"
 
@@ -23,6 +24,15 @@ void system_controller_handle_frame_cb(frame_t* rx_frame) {
 
         case msg_type_t::MSG_STATUS_REQUEST:
             // construct outgoing frame with the current control authority state
+
+            // TEST PURPOSES ONLY
+            if (rx_frame->payload[0] == 0xAC && rx_frame->payload[1] == 0xDC) {
+                uint8_t test_payload[] = {0x56, 0x78};
+                frame_encode(rx_frame, msg_type_t::MSG_STATUS_RESPONSE, test_payload, sizeof(test_payload));
+                send_frame_serial(rx_frame);
+            }
+            // TEST PURPOSES ONLY
+
             break;
 
         case msg_type_t::MSG_HEARTBEAT:

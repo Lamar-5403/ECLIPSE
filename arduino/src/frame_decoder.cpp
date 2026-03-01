@@ -1,5 +1,6 @@
 #include "frame_decoder.h"
 #include "crc16_ccitt_false.h"
+#include "../tests/integration/test_transport_serial.h"
 
 #if !defined(frame_layer_unit_test)
 #include "transport_wifi.h"
@@ -7,9 +8,9 @@
 #endif
 
 static frame_decoder_state_t decoder_state = frame_decoder_state_t::WAIT_START;
+static frame_t rx_frame;
 static uint8_t payload_index = 0;
 static uint16_t crc_calc = 0;
-static frame_t rx_frame;
 static uint8_t crc_byte_idx = 0;
 static handle_frame_cb_t handle_frame = nullptr;
 
@@ -25,6 +26,8 @@ void frame_decoder_init() {
     transport_serial_register_process_byte_cb(frame_decoder_process_byte_cb);
     transport_serial_register_decoder_reset_cb(frame_decoder_reset);
     transport_wifi_register_decoder_reset_cb(frame_decoder_reset);
+    // test_transport_serial_register_process_byte_cb(frame_decoder_process_byte_cb);
+    // test_transport_serial_register_decoder_reset_cb(frame_decoder_reset);
     #endif
 }
 

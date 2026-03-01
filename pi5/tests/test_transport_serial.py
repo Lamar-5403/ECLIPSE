@@ -8,7 +8,13 @@ sys.path.append(str(SRC))
 
 import frame
 import frame_encoder
+import frame_decoder
+import control_execution_controller
 import transport_serial
+
+control_execution_controller.control_execution_controller_init()
+frame_decoder.frame_decoder_init()
+transport_serial.transport_serial_init()
 
 test_frame = [0] * frame.FRAME_WIRE_SIZE
 
@@ -17,8 +23,6 @@ frame_encoder.frame_encode(test_frame, frame.msg_type_t.MSG_STATUS_REQUEST, payl
 
 buf = [0] * (5 + frame.FRAME_MAX_PAYLOAD)
 frame_encoder.calc_serialized_buf(test_frame, buf)
-
-transport_serial.transport_serial_init()
 
 for b in buf[:3 + test_frame[frame.LEN_OFS] + 2]:
     transport_serial.transport_serial_send_byte(b)

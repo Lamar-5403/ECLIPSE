@@ -15,9 +15,9 @@ def system_controller_handle_frame(rx_frame):
     # TEST PURPOSES ONLY
     if rx_frame.type == frame.msg_type_t.MSG_STATUS_RESPONSE:
         if rx_frame.payload[0] == 0x56 and rx_frame.payload[1] == 0x78:
-            crc = (rx_frame[frame.CRC_OFS] << 8) | rx_frame[frame.CRC_OFS + 1]
+            crc = rx_frame.crc
             print(
-                "Frame received: type: 0x{:02X}, payload: 0x{:02X} 0x{:02X}, crc: 0x{04X}".format(
+                "Frame received: type: 0x{:02X}, payload: 0x{:02X} 0x{:02X}, crc: 0x{:04X}".format(
                     rx_frame.type,
                     rx_frame.payload[0],
                     rx_frame.payload[1],

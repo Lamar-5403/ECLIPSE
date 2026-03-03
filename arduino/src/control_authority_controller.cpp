@@ -27,8 +27,36 @@ void system_controller_handle_frame_cb(frame_t* rx_frame) {
 
             // TEST PURPOSES ONLY
             if (rx_frame->payload[0] == 0xAC && rx_frame->payload[1] == 0xDC) {
+
+                // Print received frame
+                Serial.print("Frame Received: type: ");
+                Serial.print((int)rx_frame->type);
+                Serial.print(", payload: 0x");
+                for (int i = 0; i < rx_frame->len; i++) {
+                    Serial.print("0x");
+                    Serial.print(rx_frame->payload[i]);
+                    Serial.print(", ");
+                }
+                Serial.print("crc: ");
+                Serial.print(rx_frame->crc);
+                
+                // Generate outgoing frame
                 uint8_t test_payload[] = {0x56, 0x78};
                 frame_encode(rx_frame, msg_type_t::MSG_STATUS_RESPONSE, test_payload, sizeof(test_payload));
+                
+                // Print outgoing frame
+                Serial.print("Frame generated: type: ");
+                Serial.print((int)rx_frame->type);
+                Serial.print(", payload: 0x");
+                for (int i = 0; i < rx_frame->len; i++) {
+                    Serial.print("0x");
+                    Serial.print(rx_frame->payload[i]);
+                    Serial.print(", ");
+                }
+                Serial.print("crc: ");
+                Serial.print(rx_frame->crc);
+                
+                // Send frame
                 send_frame_serial(rx_frame);
             }
             // TEST PURPOSES ONLY

@@ -8,8 +8,6 @@
 
 void setup() {
 
-  Serial.begin(115200);
-
   life_cycle_state_init();
   control_authority_state_init();
   control_authority_controller_init();
@@ -25,4 +23,10 @@ void setup() {
 void loop() {
   transport_serial_poll();
   transport_wifi_poll();
+
+  // uint8_t p[2] = {0x56, 0x78};
+  // frame_t f;
+  // frame_encode(&f, msg_type_t::MSG_STATUS_REQUEST, p, 2);
+  // send_frame_serial(&f);
+  // delay(1000);
 }

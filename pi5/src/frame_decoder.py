@@ -3,6 +3,7 @@ from crc16_ccitt_false import crc16_ccitt_false
 import transport_serial
 import transport_wifi
 from frame import (
+    Frame,
     START_OFS,
     MSG_TYPE_OFS,
     LEN_OFS,
@@ -76,7 +77,13 @@ def frame_decoder_process_byte(b: int):
                 stored_crc = (rx_frame[CRC_OFS] << 8) | rx_frame[CRC_OFS + 1]
                 if crc_calc == stored_crc:
                     if _handle_frame_cb is not None:
-                        _handle_frame_cb(rx_frame)
+                        frame_obj = Frame(
+                            type = rx_frame[MSG_TYPE_OFS],
+                            length = rx_frame[LEN_OFS],
+                            payload = rx_frame[PAYLOAD_OFS : PAYLOAD_OFS + rx_frame[LEN_OFS]],
+                            crc = stored_crc,
+                        )
+                        _handle_frame_cb(frame_obj)
                 frame_decoder_reset()
 
         case _:

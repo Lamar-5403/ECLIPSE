@@ -8,7 +8,7 @@ SRC = ROOT / "src"
 sys.path.append(str(SRC))
 
 import frame
-from frame import Frame
+from frame import Frame, FRAME_MAX_PAYLOAD
 import frame_encoder
 import frame_decoder
 import control_execution_controller
@@ -18,7 +18,13 @@ control_execution_controller.control_execution_controller_init()
 frame_decoder.frame_decoder_init()
 transport_serial.transport_serial_init()
 
-test_frame: Frame
+test_frame = Frame(
+    start=0,
+    type=None,
+    length=0,
+    payload=bytearray[FRAME_MAX_PAYLOAD],
+    crc=0
+)
 
 payload = bytes([0xAC, 0xDC])
 frame_encoder.frame_encode(test_frame, frame.msg_type_t.MSG_STATUS_REQUEST, payload)

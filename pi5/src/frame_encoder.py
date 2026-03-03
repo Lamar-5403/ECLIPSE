@@ -4,7 +4,7 @@ import transport_wifi
 from crc16_ccitt_false import crc16_ccitt_false
 
 def calc_serialized_buf(frame: Frame, out):
-    length = frame.len
+    length = frame.length
 
     out[0] = frame.start
     out[1] = frame.type
@@ -22,14 +22,14 @@ def frame_encode(frame: Frame, type: int, payload: bytes):
 
     frame.start = FRAME_START_BYTE
     frame.type = type
-    frame.len = length
+    frame.length = length
     frame.write_payload(payload)
 
-    crc = crc16_ccitt_false(bytes([frame.start, frame.type, frame.len, list[frame.payload[:frame.len]]]))
+    crc = crc16_ccitt_false(bytes([frame.start, frame.type, frame.length] + list(frame.payload[:frame.length])))
     frame.set_crc(crc)
 
 def send_frame_serial(frame: Frame):
-    length = frame.len
+    length = frame.length
     total_len = 3 + length + 2
 
     buf = [0] * (5 + FRAME_MAX_PAYLOAD)
@@ -39,7 +39,7 @@ def send_frame_serial(frame: Frame):
         transport_serial.transport_serial_send_byte(buf[i])
 
 def send_frame_wifi(frame: Frame):
-    length = frame.len
+    length = frame.length
     total_len = 3 + length + 2
 
     buf = [0] * (5 + FRAME_MAX_PAYLOAD)

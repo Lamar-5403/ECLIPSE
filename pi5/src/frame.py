@@ -1,10 +1,9 @@
 from enum import IntEnum
-global FRAME_START_BYTE, FRAME_MAX_PAYLOAD, FRAME_WIRE_SIZE, frame_t
+global FRAME_START_BYTE, FRAME_MAX_PAYLOAD, FRAME_WIRE_SIZE
 
 FRAME_START_BYTE = 0xAA
 FRAME_MAX_PAYLOAD = 256
 FRAME_WIRE_SIZE = 1 + 1 + 1 + FRAME_MAX_PAYLOAD + 2
-frame_t = bytearray(FRAME_WIRE_SIZE)
 
 START_OFS = 0
 MSG_TYPE_OFS = 1
@@ -37,11 +36,19 @@ class connection_status_t(IntEnum):
     WIFI_FAILED         = 4
 
 class Frame:
-    __slots__ = ("type", "len", "payload", "crc")
+    __slots__ = ("type", "length", "payload", "crc")
 
     def __init__(self, start, type: msg_type_t, length, payload, crc):
         self.start = start
         self.type = type
-        self.len = length
-        self.payload = payload
+        self.length = length
+        self.payload = payload if payload is not None else bytearray(FRAME_MAX_PAYLOAD)
+        self.crc = crc
+
+    def write_payload(self, data: bytes):
+        n = len(data)
+        self.payload[:n] = data
+        self.length = n
+
+    def set_crc(self, crc: int):
         self.crc = crc

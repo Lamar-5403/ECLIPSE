@@ -24,7 +24,7 @@ def transport_serial_register_decoder_reset_cb(cb):
 
 def transport_serial_init():
     global _ser
-    _ser = serial.Serial(port="COM3", baudrate=115200, timeout=1)
+    _ser = serial.Serial(port="/dev/ttyACM0", baudrate=115200, timeout=1)
     _ser.setDTR(True)
     _ser.setRTS(True)
     time.sleep(0.5)

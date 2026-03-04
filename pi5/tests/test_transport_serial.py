@@ -22,7 +22,7 @@ test_frame = Frame(
     start=0,
     type=None,
     length=0,
-    payload=bytearray[FRAME_MAX_PAYLOAD],
+    payload=bytearray(FRAME_MAX_PAYLOAD),
     crc=0
 )
 
@@ -32,7 +32,7 @@ frame_encoder.frame_encode(test_frame, frame.msg_type_t.MSG_STATUS_REQUEST, payl
 buf = [0] * (5 + frame.FRAME_MAX_PAYLOAD)
 frame_encoder.calc_serialized_buf(test_frame, buf)
 
-for b in buf[:3 + test_frame.len + 2]:
+for b in buf[:3 + test_frame.length + 2]:
     transport_serial.transport_serial_send_byte(b)
     time.sleep(0.002)
 

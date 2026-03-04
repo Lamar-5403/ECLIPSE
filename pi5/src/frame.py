@@ -36,7 +36,7 @@ class connection_status_t(IntEnum):
     WIFI_FAILED         = 4
 
 class Frame:
-    __slots__ = ("type", "length", "payload", "crc")
+    __slots__ = ("start", "type", "length", "payload", "crc")
 
     def __init__(self, start, type: msg_type_t, length, payload, crc):
         self.start = start

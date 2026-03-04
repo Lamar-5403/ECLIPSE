@@ -17,9 +17,6 @@ void transport_serial_init() {
 }
 
 void transport_serial_poll() {
-    if (frame_decoder_reset_cb) {
-        frame_decoder_reset_cb();
-    }
     while (Serial.available() > 0) {
         if (process_byte_cb) {
             process_byte_cb(Serial.read());

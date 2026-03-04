@@ -30,9 +30,6 @@ def transport_serial_init():
     time.sleep(0.5)
 
 def transport_serial_poll():
-    if _decoder_reset_cb is not None:
-        _decoder_reset_cb()
-
     n = _ser.in_waiting
     if n > 0:
         data = _ser.read(n)

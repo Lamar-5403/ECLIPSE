@@ -76,12 +76,13 @@ def frame_decoder_process_byte(b: int):
                 rx_frame.crc |= b
                 crc_idx = 0
                 # calculate and compare crc16 value to validate frame
-                crc_calc = crc16_ccitt_false(
-                    bytes([ rx_frame.start,
-                            rx_frame.type,
-                            rx_frame.length] + 
-                            list(rx_frame.payload[:rx_frame.length]))
-                )
+                crc_input = bytes([
+                    rx_frame.start,
+                    int(rx_frame.type),
+                    rx_frame.length,
+                    *rx_frame.payload[:rx_frame.length]
+                ])
+                crc_calc = crc16_ccitt_false(crc_input)
                 if crc_calc == rx_frame.crc:
                     if _handle_frame_cb is not None:
                         _handle_frame_cb(rx_frame)

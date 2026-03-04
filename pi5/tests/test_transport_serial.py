@@ -20,7 +20,7 @@ transport_serial.transport_serial_init()
 
 test_frame = Frame(
     start=0,
-    type=None,
+    type=frame.msg_type_t.MSG_STATUS_REQUEST,
     length=0,
     payload=bytearray(FRAME_MAX_PAYLOAD),
     crc=0
@@ -34,7 +34,6 @@ frame_encoder.calc_serialized_buf(test_frame, buf)
 
 for b in buf[:3 + test_frame.length + 2]:
     transport_serial.transport_serial_send_byte(b)
-    time.sleep(0.002)
 
 while True:
     transport_serial.transport_serial_poll()

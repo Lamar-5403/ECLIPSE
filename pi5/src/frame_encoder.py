@@ -25,7 +25,13 @@ def frame_encode(frame: Frame, type: int, payload: bytes):
     frame.length = length
     frame.write_payload(payload)
 
-    crc = crc16_ccitt_false(bytes([frame.start, frame.type, frame.length] + list(frame.payload[:frame.length])))
+    crc_input = bytes([
+                    frame.start,
+                    int(frame.type),
+                    frame.length,
+                    *frame.payload[:frame.length]
+                ])
+    crc = crc16_ccitt_false(crc_input)
     frame.set_crc(crc)
 
 def send_frame_serial(frame: Frame):

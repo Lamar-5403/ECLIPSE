@@ -2,8 +2,8 @@ import frame_encoder
 import transport_wifi
 import frame_decoder
 import frame
-# from frame import frame_t
-# from frame import connection_status_t
+from attack_discovery import discover_hosts
+from attack_port_scanner import scan_ports
 
 def control_execution_controller_init():
     # transport_wifi.transport_wifi_register_status_cb(system_controller_wifi_status_cb)
@@ -30,3 +30,8 @@ def system_controller_handle_frame(rx_frame):
 # def system_controller_wifi_status_cb(connection_status_t status):
 #     if status == (connection_status_t): WIFI_DISCONNECTED
         # degrade 
+
+if __name__ == "__main__":
+    data = discover_hosts("192.168.56.0/24")
+    data = scan_ports(data)
+    print(data)

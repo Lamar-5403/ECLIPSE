@@ -1,29 +1,24 @@
 import nmap
 
-def scan_network(target):
+def discover_hosts(target):
     nm = nmap.PortScanner()
 
     nm.scan(target, arguments='-sn')
     
     hosts = nm.all_hosts()
 
+    data = { "hosts": [] }
+
     if not hosts:
-        print("No hosts discovered")
-        return
+        return data
     
     for host in hosts:
-        print(f"Host: {host}")
-        print(f"State: {nm[host].state()}")
+        if nm[host].state() == "up":
+            data["hosts"].append({ "ip": host, "ports": [] })
 
-        for proto in nm[host].all_protocols():
-            ports = nm[host][proto].keys()
-
-            for port in ports: 
-                state = nm[host][proto][port]['state']
-                service = nm[host][proto][port]['name']
-
-                print(f"Port {port}/{proto} - {state} - {service}")
+    return data
 
 if __name__ == "__main__":
-    target_ip = "192.168.4.0/22"
-    scan_network(target_ip)
+    target_ip = "192.168.56.0/24"
+    results = discover_hosts(target_ip)
+    print(results)

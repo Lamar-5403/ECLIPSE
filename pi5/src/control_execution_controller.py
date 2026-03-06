@@ -2,6 +2,8 @@ import frame_encoder
 import transport_wifi
 import frame_decoder
 import frame
+import json
+from datetime import datetime, timezone
 from attack_discovery import discover_hosts
 from attack_port_scanner import scan_ports
 from attack_service_enum import enumerate_services
@@ -33,7 +35,15 @@ def system_controller_handle_frame(rx_frame):
         # degrade 
 
 if __name__ == "__main__":
+    timestamp = datetime.now(timezone.utc).isoformat()
+    filename = f"scan_{datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")}.json"
     data = discover_hosts("192.168.56.0/24")
     data = scan_ports(data)
     data = enumerate_services(data)
+    log_entry = {
+        "timestamp": timestamp,
+        "data": data
+    }
+    with open(filename, "w") as f:
+        json.dump(log_entry, f, indent=4)
     print(data)

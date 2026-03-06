@@ -30,7 +30,3 @@ def enumerate_services(data):
                         p["service"] = service
                         p["version"] = f"{product} {version} {extrainfo}".strip()
     return data
-
-# if __name__ == "__main__":
-#     results = enumerate_services()
-#     print(results)

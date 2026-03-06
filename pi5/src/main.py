@@ -1,7 +1,7 @@
+import control_execution_controller
+import frame_decoder
 import transport_serial
 import transport_wifi
-import frame_decoder
-import control_execution_controller
 
 def main():
     control_execution_controller.control_execution_controller_init()

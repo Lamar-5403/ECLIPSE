@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "life_cycle_state.h"
-#include "control_authority_controller.h"
 #include "control_authority_state.h"
+#include "control_authority_controller.h"
 #include "frame_decoder.h"
 #include "transport_serial.h"
 #include "transport_wifi.h"

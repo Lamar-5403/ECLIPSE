@@ -19,21 +19,39 @@ class msg_type_t(IntEnum):
     MSG_STATUS_RESPONSE = 0x04
     MSG_HEARTBEAT       = 0x05
 
+# MITRE ATT&CK tactic codes
+class tactic_code_t(IntEnum):
+    TA_RECON            = 0x43
+    TA_INIT_ACS         = 0x01
+    TA_PRIV_ESC         = 0x04
+    TA_CRED_ACS         = 0x06
+    TA_DISCO            = 0x07
+    TA_LAT_MOV          = 0x08
+    TA_COMM_CONT        = 0x11
+
+# MITRE ATT&CK technique codes
+class technique_code_t(IntEnum):
+    T1_ACT_SCAN         = 0x01
+    T1_SERV_ENUM        = 0x02
+    T1_BRUT_FRCE        = 0x03
+    T1_REM_SYS_DIS      = 0x04
+    T1_NET_SERV_DIS     = 0x05
+
 # Decoder states
 class frame_decoder_state(IntEnum):
-    WAIT_START          = 0
-    READ_TYPE           = 1
-    READ_LEN            = 2
-    READ_PAYLOAD        = 3
-    READ_CRC            = 4
+    WAIT_START          = 0x01
+    READ_TYPE           = 0x02
+    READ_LEN            = 0x03
+    READ_PAYLOAD        = 0x04
+    READ_CRC            = 0x05
 
 # Wifi Connection statuses
 class connection_status_t(IntEnum):
-    WIFI_UNINITIALIZED  = 0
-    WIFI_CONNECTING     = 1
-    WIFI_CONNECTED      = 2
-    WIFI_DISCONNECTED   = 3
-    WIFI_FAILED         = 4
+    WIFI_UNINITIALIZED  = 0x01
+    WIFI_CONNECTING     = 0x02
+    WIFI_CONNECTED      = 0x03
+    WIFI_DISCONNECTED   = 0x04
+    WIFI_FAILED         = 0x05
 
 class Frame:
     __slots__ = ("start", "type", "length", "payload", "crc")

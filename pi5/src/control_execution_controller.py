@@ -8,6 +8,7 @@ from attack_discovery import discover_hosts
 from attack_port_scanner import scan_ports
 from attack_service_enum import enumerate_services
 from attack_vuln_mapper import map_vuln
+from attack_planner import plan_attack
 
 def control_execution_controller_init():
     # transport_wifi.transport_wifi_register_status_cb(system_controller_wifi_status_cb)
@@ -42,6 +43,7 @@ if __name__ == "__main__":
     data = scan_ports(data)
     data = enumerate_services(data)
     data = map_vuln(data)
+    data = plan_attack(data)
     log_entry = {
         "timestamp": timestamp,
         "data": data

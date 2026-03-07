@@ -33,9 +33,10 @@ class tactic_code_t(IntEnum):
 class technique_code_t(IntEnum):
     T1_ACT_SCAN         = 0x01
     T1_SERV_ENUM        = 0x02
-    T1_BRUT_FRCE        = 0x03
-    T1_REM_SYS_DIS      = 0x04
-    T1_NET_SERV_DIS     = 0x05
+    T1_EXP_PUB_APP      = 0x03
+    T1_BRUT_FRCE        = 0x04
+    T1_REM_SYS_DIS      = 0x05
+    T1_NET_SERV_DIS     = 0x06
 
 # Decoder states
 class frame_decoder_state(IntEnum):

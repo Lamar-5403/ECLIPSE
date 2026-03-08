@@ -1,8 +1,70 @@
+#include <Arduino.h>
 #include "control_authority_controller.h"
 #include "transport_wifi.h"
 #include "transport_serial.h"
 #include "frame_decoder.h"
 #include "types.h"
+
+constexpr tactic_policy_t TACTIC_POLICY[] = {
+    {0x01, true},
+    {0x06, true},
+    {0x07, true},
+    {0x08, false}
+};
+
+constexpr technique_policy_t TECHNIQUE_POLICY[] = {
+    {0x03, true},
+    {0x04, true},
+    {0x06, true}
+};
+
+static cooldown_entry_t COOLDOWN_TABLE[] = {
+    {0x01, 5000, 0},
+    {0x03, 30000, 0},
+    {0x04, 60000, 0},
+    {0x06, 10000, 0}
+};
+
+bool tactic_allowed(uint8_t tactic) {
+    for (size_t i = 0; i < sizeof(TACTIC_POLICY)/sizeof(tactic_policy_t); i++) {
+        if (TACTIC_POLICY[i].tactic == tactic) {
+            return TACTIC_POLICY[i].allowed;
+        }
+    }
+
+    return false;
+}
+
+bool technique_allowed(uint8_t technique) {
+    for (size_t i = 0; i < sizeof(TECHNIQUE_POLICY)/sizeof(technique_policy_t); i++) {
+        if (TECHNIQUE_POLICY[i].technique == technique) {
+            return TECHNIQUE_POLICY[i].allowed;
+        }
+    }
+
+    return false;
+}
+
+bool cooldown_ready(uint8_t technique) {
+    uint32_t now = millis();
+
+    for (size_t i = 0; i < sizeof(COOLDOWN_TABLE)/sizeof(cooldown_entry_t); i++) {
+        if (COOLDOWN_TABLE[i].technique == technique) {
+            if(now - COOLDOWN_TABLE[i].last_execution >= COOLDOWN_TABLE[i].cooldown_ms) {
+
+                noInterrupts();
+                COOLDOWN_TABLE[i].last_execution = now;
+                interrupts();
+
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    return false;
+}
 
 void control_authority_controller_init() {
     transport_wifi_register_status_cb(system_controller_wifi_status_cb);

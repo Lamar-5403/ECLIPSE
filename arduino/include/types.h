@@ -71,3 +71,20 @@ enum class connection_status_t {
     WIFI_FAILED
 };
 
+// Scope Control Policies
+struct tactic_policy_t {
+    uint8_t tactic;
+    bool allowed;
+};
+
+struct technique_policy_t {
+    uint8_t technique;
+    bool allowed;
+};
+
+// Cooldown Policy
+struct cooldown_entry_t {
+    uint8_t technique;
+    uint32_t cooldown_ms;
+    uint32_t last_execution;
+};

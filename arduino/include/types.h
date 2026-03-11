@@ -12,11 +12,11 @@ enum class life_cycle_state_t {
 
 // Control Authority State
 enum class control_authority_state_t {
-    CAS_SAFE,
-    CAS_ARMING,
-    CAS_ARMED,
-    CAS_DISARMED,
-    CAS_LOCKOUT
+    CAS_SAFE             = 0x01,
+    CAS_ARMING           = 0x02,
+    CAS_ARMED            = 0x03,
+    CAS_DISARMED         = 0x04,
+    CAS_LOCKOUT          = 0x05
 };
 
 // Message type architecture
@@ -35,7 +35,7 @@ constexpr size_t FRAME_MAX_PAYLOAD = 256;
 struct __attribute__((packed)) frame_t {
     uint8_t start;
     msg_type_t type;
-    uint8_t len;
+    uint8_t length;
     uint8_t payload[FRAME_MAX_PAYLOAD];
     uint16_t crc;
 

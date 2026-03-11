@@ -84,6 +84,7 @@ def frame_decoder_process_byte(b: int):
                 ])
                 crc_calc = crc16_ccitt_false(crc_input)
                 if crc_calc == rx_frame.crc:
+                    print("complete frame received")
                     if _handle_frame_cb is not None:
                         _handle_frame_cb(rx_frame)
                 frame_decoder_reset()

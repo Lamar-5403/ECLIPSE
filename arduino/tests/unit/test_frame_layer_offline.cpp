@@ -19,12 +19,12 @@ int main() {
     uint8_t buf[5 + FRAME_MAX_PAYLOAD];
     calc_serialized_buf(&test_frame, buf);
 
-    for (int i = 0; i < 3 + test_frame.len + 2; i++) {
+    for (int i = 0; i < 3 + test_frame.length + 2; i++) {
         frame_decoder_process_byte_cb(buf[i]);
     }
 
-    printf("Frame Decoded: type: 0x%02X, len: %d, payload: ", (uint8_t)test_frame.type, test_frame.len);
-    for (int i = 0; i < test_frame.len; i++) {
+    printf("Frame Decoded: type: 0x%02X, len: %d, payload: ", (uint8_t)test_frame.type, test_frame.length);
+    for (int i = 0; i < test_frame.length; i++) {
         printf("0x%02X, ", test_frame.payload[i]);
     }
     printf(" crc: 0x%04X", test_frame.crc);

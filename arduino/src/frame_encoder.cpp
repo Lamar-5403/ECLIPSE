@@ -9,27 +9,27 @@
 void calc_serialized_buf(const frame_t* f, uint8_t* out) {
     out[0] = f->start;
     out[1] = static_cast<int>(f->type); 
-    out[2] = f->len;
+    out[2] = f->length;
 
-    for (int i = 0; i < f->len; i++)
+    for (int i = 0; i < f->length; i++)
         out [3 + i] = f->payload[i];
 
-    out[3 + f->len] = static_cast<uint8_t>((f->crc >> 8) & 0xFF);   // MSB
-    out[3 + f->len + 1] = static_cast<uint8_t>(f->crc & 0xFF);      // LSB
+    out[3 + f->length] = static_cast<uint8_t>((f->crc >> 8) & 0xFF);   // MSB
+    out[3 + f->length + 1] = static_cast<uint8_t>(f->crc & 0xFF);      // LSB
 }
 
-void frame_encode(frame_t* f, msg_type_t type, const uint8_t* data, uint8_t len) {
+void frame_encode(frame_t* f, msg_type_t type, const uint8_t* data) {
     f->start = FRAME_START_BYTE;
     f->type = type;
-    f->len = len;
-    for (uint8_t i = 0; i < len; i++)
+    f->length = sizeof(data);
+    for (uint8_t i = 0; i < f->length; i++)
         f->payload[i] = data[i];
-    f->crc = crc16_ccitt_false(reinterpret_cast<uint8_t*>(f), 3 + len);
+    f->crc = crc16_ccitt_false(reinterpret_cast<uint8_t*>(f), 3 + f->length);
 }
 
 #if !defined(frame_layer_unit_test)
 void send_frame_serial(frame_t* f) {
-    uint8_t total_len = 3 + f->len + 2;
+    uint8_t total_len = 3 + f->length + 2;
     uint8_t buf[5 + FRAME_MAX_PAYLOAD];
 
     calc_serialized_buf(f, buf);
@@ -39,7 +39,7 @@ void send_frame_serial(frame_t* f) {
 }
 
 void send_frame_wifi(frame_t* f) {
-    uint8_t total_len = 3 + f->len + 2;
+    uint8_t total_len = 3 + f->length + 2;
     uint8_t buf[5 + FRAME_MAX_PAYLOAD];
 
     calc_serialized_buf(f, buf);

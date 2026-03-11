@@ -13,8 +13,8 @@ def transport_wifi_register_decoder_reset_cb(cb):
     global _decoder_reset_cb
     _decoder_reset_cb = cb
 
-def transport_wifi_register_status_cb(cb):
-    _status_cb = cb
+# def transport_wifi_register_status_cb(cb):
+#     _status_cb = cb
 
 def transport_wifi_init():
     global sock, connection, client_addr
@@ -24,9 +24,6 @@ def transport_wifi_init():
     sock.bind((server_addr))
     sock.listen(1)
     connection, client_addr = sock.accept()
-    
-    if _decoder_reset_cb is not None:
-        _decoder_reset_cb()
 
 
 def transport_wifi_poll():

@@ -6,6 +6,7 @@
 #include "types.h"
 
 constexpr tactic_policy_t TACTIC_POLICY[] = {
+    {0x43, true},
     {0x01, true},
     {0x06, true},
     {0x07, true},
@@ -13,6 +14,7 @@ constexpr tactic_policy_t TACTIC_POLICY[] = {
 };
 
 constexpr technique_policy_t TECHNIQUE_POLICY[] = {
+    {0x01, true},
     {0x03, true},
     {0x04, true},
     {0x06, true}
@@ -25,8 +27,12 @@ static cooldown_entry_t COOLDOWN_TABLE[] = {
     {0x06, 10000, 0}
 };
 
+constexpr size_t TACTIC_POLICY_COUNT = sizeof(TACTIC_POLICY)/sizeof(tactic_policy_t);
+constexpr size_t TECHNIQUE_POLICY_COUNT = sizeof(TECHNIQUE_POLICY)/sizeof(technique_policy_t);
+constexpr size_t COOLDOWN_ENTRY_COUNT = sizeof(COOLDOWN_TABLE)/sizeof(cooldown_entry_t);
+
 bool tactic_allowed(uint8_t tactic) {
-    for (size_t i = 0; i < sizeof(TACTIC_POLICY)/sizeof(tactic_policy_t); i++) {
+    for (size_t i = 0; i < TACTIC_POLICY_COUNT; i++) {
         if (TACTIC_POLICY[i].tactic == tactic) {
             return TACTIC_POLICY[i].allowed;
         }
@@ -36,7 +42,7 @@ bool tactic_allowed(uint8_t tactic) {
 }
 
 bool technique_allowed(uint8_t technique) {
-    for (size_t i = 0; i < sizeof(TECHNIQUE_POLICY)/sizeof(technique_policy_t); i++) {
+    for (size_t i = 0; i < TECHNIQUE_POLICY_COUNT; i++) {
         if (TECHNIQUE_POLICY[i].technique == technique) {
             return TECHNIQUE_POLICY[i].allowed;
         }
@@ -48,7 +54,7 @@ bool technique_allowed(uint8_t technique) {
 bool cooldown_ready(uint8_t technique) {
     uint32_t now = millis();
 
-    for (size_t i = 0; i < sizeof(COOLDOWN_TABLE)/sizeof(cooldown_entry_t); i++) {
+    for (size_t i = 0; i < COOLDOWN_ENTRY_COUNT; i++) {
         if (COOLDOWN_TABLE[i].technique == technique) {
             if(now - COOLDOWN_TABLE[i].last_execution >= COOLDOWN_TABLE[i].cooldown_ms) {
 
@@ -75,9 +81,24 @@ void system_controller_handle_frame_cb(frame_t* rx_frame) {
     switch (rx_frame->type) {
         case msg_type_t::MSG_ARM:
             set_control_authority_state(control_authority_state_t::CAS_ARMING);
-            // check cooldowns, verify scope, etc
+
+            if (rx_frame->length < 2)
+                return;
+
+            if (!tactic_allowed(rx_frame->payload[0]))
+                return;
+
+            if (!technique_allowed(rx_frame->payload[1]))
+                return;
+
+            if (!cooldown_ready(rx_frame->payload[1]))
+                return;
+
             set_control_authority_state(control_authority_state_t::CAS_ARMED);
-            // send authorization frame
+            
+            rx_frame->payload[0] = {0x03};
+            frame_encode(rx_frame, msg_type_t::MSG_STATUS_RESPONSE, rx_frame->payload);
+            send_frame_serial(rx_frame);
             break;
 
         case msg_type_t::MSG_DISARM:
@@ -94,7 +115,7 @@ void system_controller_handle_frame_cb(frame_t* rx_frame) {
                 Serial.print("Frame Received: type: ");
                 Serial.print((int)rx_frame->type);
                 Serial.print(", payload: 0x");
-                for (int i = 0; i < rx_frame->len; i++) {
+                for (int i = 0; i < rx_frame->length; i++) {
                     Serial.print("0x");
                     Serial.print(rx_frame->payload[i]);
                     Serial.print(", ");
@@ -104,13 +125,13 @@ void system_controller_handle_frame_cb(frame_t* rx_frame) {
                 
                 // Generate outgoing frame
                 uint8_t test_payload[] = {0x56, 0x78};
-                frame_encode(rx_frame, msg_type_t::MSG_STATUS_RESPONSE, test_payload, sizeof(test_payload));
+                frame_encode(rx_frame, msg_type_t::MSG_STATUS_RESPONSE, test_payload);
                 
                 // Print outgoing frame
                 Serial.print("Frame generated: type: ");
                 Serial.print((int)rx_frame->type);
                 Serial.print(", payload: 0x");
-                for (int i = 0; i < rx_frame->len; i++) {
+                for (int i = 0; i < rx_frame->length; i++) {
                     Serial.print("0x");
                     Serial.print(rx_frame->payload[i]);
                     Serial.print(", ");

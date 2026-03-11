@@ -55,14 +55,14 @@ void frame_decoder_process_byte_cb(uint8_t b) {
             break;
 
         case frame_decoder_state_t::READ_LEN:
-            rx_frame.len = b;
+            rx_frame.length = b;
             payload_index = 0;
             decoder_state = (b == 0 ? frame_decoder_state_t::READ_CRC : frame_decoder_state_t::READ_PAYLOAD);     // if payload length is 0, skip to crc check, else read payload 
             break;
 
         case frame_decoder_state_t::READ_PAYLOAD:
             rx_frame.payload[payload_index++] = b;
-            if (payload_index == rx_frame.len)
+            if (payload_index == rx_frame.length)
                 decoder_state = frame_decoder_state_t::READ_CRC;
             break;
 
@@ -77,7 +77,7 @@ void frame_decoder_process_byte_cb(uint8_t b) {
 
             if (crc_byte_idx == 2) {
                 crc_byte_idx = 0;
-                crc_calc = crc16_ccitt_false(reinterpret_cast<const uint8_t*>(&rx_frame.start), (3 + rx_frame.len));
+                crc_calc = crc16_ccitt_false(reinterpret_cast<const uint8_t*>(&rx_frame.start), (3 + rx_frame.length));
                 bool verified = (rx_frame.crc == crc_calc);
                 if (verified) {
                     //callback hook

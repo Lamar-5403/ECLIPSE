@@ -136,7 +136,7 @@ This protocol currently provides no cryptographic authentication or confidential
 ## 6.0 REVISION HISTORY
 
 |Version |Date       |Description   |
-|        |           |              |
+|:---    |:---       |:---          |
 |0.1     |2026-01-16 |Initial Draft |
 |0.2     |2026-01-19 |Revised draft |
 

@@ -1,9 +1,7 @@
 # COMMUNICATION PROTOCOL SPECIFICATION
 
-Document Version: 0.1  
-Status: Draft  
-
-**Framed Communication Protocol for Distributed Control Systems**
+Document Version: 1.0.0  
+Status: Released  
 
 ---
 ## 1.0 SCOPE
@@ -18,11 +16,12 @@ The following documents form a part of this specification to the extent specifie
 - ISO/IEC 9899 - C language standard
 - ISO/IEC 14882 - C++ language standard
 - RFC 1662 - PPP in HDLC-like Framing (analogous implementation)
-- CCITT CRC-16 Specification (X.25 / CCITT-FALSE)
+- CCITT CRC-16 Specification (CRC-16/CCITT-FALSE)
 - Project internal documents:
-    - 02_architecture.md
-    - 04_security_threat_model.md
-    - 05_test_plan.md
+	- `02_architecture.md`
+	- `03_lifecycle_and_state.md`
+	- `05_security_threat_model.md`
+	- `06_test_plan.md`
 
 This specification assumes the system architecture defined in `02_architecture.md`. Language standards are referenced to constrain implementation behavior only and do not define protocol semantics.
 
@@ -32,7 +31,7 @@ This specification assumes the system architecture defined in `02_architecture.m
 
 ### 2.1 Message Frame Structure
 
-The protocol is transport-agnostic and may be conveyed over any byte stream interface capable of preserving message order. All interprocessor messages conform to the following standardized frame format:
+The protocol is transport-agnostic and may be conveyed over any byte stream interface capable of preserving message order. It defines a framing and message semantic layer operating above an ordered byte stream transport. All inter-processor messages conform to the following standardized frame format:
 
 ```text
 +----------+----------+----------+----------+----------+
@@ -41,9 +40,12 @@ The protocol is transport-agnostic and may be conveyed over any byte stream inte
 +----------+----------+----------+----------+----------+
 ```
 
+Maximum payload size: 255 bytes
+Maximum frame wire size: 260 bytes
+
 **Start Byte (0xAA):** Frame synchronization marker for byte alignment detection
 
-**Message Type Field (Summary):**
+**Message Type Field:**
 - MSG_ARM (0x01): Authorization request message
 - MSG_DISARM (0x02): Authorization revocation message
 - MSG_STATUS_REQUEST (0x03): System state query message
@@ -52,11 +54,11 @@ The protocol is transport-agnostic and may be conveyed over any byte stream inte
 
 Detailed semantics, authority constraints, and state effects defined in Section 2.2.
 
-**Length:** Specifies length in bytes of payload field
+**Length:** Unsigned 8-bit field specifying the number of payload bytes present in the frame (0–255).
 
-**Payload:** Message to be delivered, interpreted based on MSG_TYPE, up to maximum payload size of 255 bytes
+**Payload:** Message to be delivered, interpreted based on MSG_TYPE
 
-**CRC (Cyclic Redundancy Check):** 16-bit CRC-16/CCITT-FALSE calculated over Start, Type, Length and Payload fields for transmission error detection, transmitted MSB first. Start byte included to detect false frame alignment. Receiver must resynchronize on Start regardless of CRC.
+**CRC (Cyclic Redundancy Check):** 16-bit CRC-16/CCITT-FALSE calculated over the Start, Type, Length and Payload fields using polynomial 0x1021, initial value 0xFFFF, no bit reflection, and no final XOR. CRC is transmitted MSB first. The Start byte is included in the CRC calculation to reduce false frame alignment. If CRC validation fails, the receiver shall discard the frame and resume scanning the byte stream for the next Start byte, attempting frame reconstruction from that position.
 
 ### 2.2 Message Type Definitions (Normative)
 
@@ -122,34 +124,27 @@ All messages include 16-bit CRC-16/CCITT-FALSE (polynomial 0x1021) calculated ov
 ### 4.1 Deterministic Processing Constraints
 
 - Commands shall not block frame parsing.
-- Frame processing shall complete within a bounded, non-blocking execution window appropriate to the execution environment (typically one main loop iteration).
+- Frame processing shall be bounded and non-blocking. Parsing and validation must complete within a single scheduling cycle of the execution environment (typically one main loop iteration).
 - No command may cause unbounded delay of subsequent frames.
 
 ---
 
 ## 5.0 SECURITY CONSIDERATIONS
 
-This protocol currently provides no cryptographic authentication or confidentiality guarantees. Security mechanisms, including message authentication and asymmetric key exchange, will be defined in `04_security_threat_model.md` and integrated in a future revision. This revision does not attempt to mitigate spoofing, replay, or eavesdropping threats. Role enforcement is strictly logical, not cryptographic. Message authenticity and origin validation are explicitly out of scope for this revision.
+This protocol currently provides no cryptographic authentication or confidentiality guarantees. Security mechanisms, including message authentication and asymmetric key exchange, will be defined in `05_security_threat_model.md` and integrated in a future revision. This revision does not attempt to mitigate spoofing, replay, or eavesdropping threats. Role enforcement is strictly logical, not cryptographic. Message authenticity and origin validation are explicitly out of scope for this revision.
 
 ---
 
-## 6.0 REVISION HISTORY
+## 6.0 ACRONYMS AND DEFINITIONS
 
-|Version |Date       |Description   |
-|:---    |:---       |:---          |
-|0.1     |2026-01-16 |Initial Draft |
-|0.2     |2026-01-19 |Revised draft |
-
----
-
-## 7.0 ACRONYMS AND DEFINITIONS
-
+- CAS: Control Authority State
 - CCITT: Consultative Committee for International Telephony and Telegraphy
 - CRC: Cyclic Redundancy Check
 - FSM: Finite State Machine
 - MCU: Microcontroller unit
 - MPU: Microprocessor unit
 - MSB: Most Significant Bit
+- SLS: System Lifecycle State
 
 ---
 

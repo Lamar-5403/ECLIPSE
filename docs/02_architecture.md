@@ -1,7 +1,7 @@
 # SYSTEM ARCHITECTURE
 
-Document Version: 0.2  
-Status: Draft
+Document Version: 1.0.0  
+Status: Released
 
 ---
 
@@ -9,9 +9,9 @@ Status: Draft
 
 This architecture defines the structural composition of the system, the allocation of authority across nodes, and the permitted interaction paths between components.
 
-The objective is to enforce centralized decision authority while allowing distributed execution, observation, and evidence collection across heterogeneous compute platforms.
+The objective is to enforce centralized decision authority while allowing distributed execution, observation, and evidence collection across heterogeneous system nodes.
 
-This document constrains implementation choices without prescribing specific hardware, operating systems, or transport mechanisms beyond those already assumed in the system overview. This document defines architectural invariants that all implementations must preserve.
+This document constrains implementation choices while remaining independent of specific hardware implementations beyond the architectural assumptions defined in the System Requirements Specification. It defines architectural invariants that all implementations must preserve.
 
 ---
 
@@ -19,13 +19,13 @@ This document constrains implementation choices without prescribing specific har
 
 The system is composed of discrete nodes, each assigned a single primary responsibility class:
 
-- **Authoritative Control**
-- **Execution**
-- **Observation**
+- **Authoritative Controller**
+- **Execution Node**
+- **Observation Node**
 
 Each node MUST:
 - Operate independently
-- Communicates exclusively through framed messages
+- Communicate exclusively through framed messages
 - Enforce local safety constraints regardless of peer behavior
 
 No node may occupy more than one responsibility class for critical actions. Responsibility classes must be mutually exclusive by architectural mandate and must not be combined, overridden, or bypassed through configuration, deployment topology, or operational mode.
@@ -36,11 +36,11 @@ No node may occupy more than one responsibility class for critical actions. Resp
 
 ### 3.1 Authoritative Controller
 
-The authoritative controller is the sole entity permitted to mutate authoritative system state machines.
+The authoritative controller is the sole entity permitted to mutate global system state machines.
 
 Responsibilities:
 
-- Maintain the global finite state machine
+- Maintain the authoritative global state machines
 - Validate and authorize state transitions
 - Accept or reject requests from non-authoritative nodes
 - Emit authoritative control messages
@@ -60,11 +60,11 @@ The authoritative controller maintains exactly two independent finite state mach
 - **Control Authority State (CAS)** - governs execution authorization
 - **System Lifecycle State (SLS)** - governs system phase and readiness
 
-CAS and SLS are orthogonal, authoritative, and singular. No other state machines are permitted to confer execution authority or lifecycle progression.
+CAS and SLS are orthogonal state machines whose transitions are independently validated by the authoritative controller. No other state machines are permitted to confer execution authority or lifecycle progression.
 
 The semantics, transitions, and coupling constraints of CAS and SLS are normatively defined in `03_lifecycle_and_state.md`.
 
-### 3.2 Execution Nodes
+### 3.2 Execution Node
 
 Execution nodes must perform actions only when explicitly authorized.
 
@@ -77,13 +77,13 @@ Responsibilities:
 Constraints:
 
 - May not initiate state transitions
-- May refuse commands silently
+- Must reject unauthorized or unsafe commands
 - Must tolerate loss of control connectivity by entering a safe local condition
 - Must not execute commands unless explicitly authorized by the authoritative controller
 
 Execution capability must not imply trust.
 
-### 3.3 Observation / Evidence Nodes
+### 3.3 Observation Node
 
 Observation nodes collect telemetry, logs, and artifacts.
 
@@ -103,7 +103,7 @@ Constraints:
 
 ## 4.0 AUTHORITY AND TRUST BOUNDARIES
 
-Authority must be explicit, singular, and non-transferable. Authority must be derived solely from architectural role, not message content.
+Authority must be explicit, singular, and non-transferable. Authority must be derived solely from architectural role assignment at system initialization, not from message content or runtime negotiation.
 
 - Only the authoritative controller may mutate global system state
 - No trust is implied by message origin alone
@@ -139,7 +139,7 @@ The following must not occur.
 
 ## 5.0 INTER-NODE COMMUNICATION MODEL
 
-All communication occurs via framed messages over an ordered byte stream. Ordering guarantees must be provided as specified in `00_overview.md`.
+All communication occurs via framed messages transported over a byte stream. The architecture assumes only that bytes may be delivered, lost, duplicated, or corrupted. Message framing, validation, and error detection are defined by the communication protocol specification.
 
 Architectural constraints:
 
@@ -154,7 +154,7 @@ Each node treats every incoming frame as potentially malformed, delayed, duplica
 
 ## 6.0 FAILURE ISOLATION MODEL
 
-Failures must be treated as partial, asymmetric, and silent.
+Failures must be treated as partial, asymmetric, silent, and potentially permanent.
 
 Design assumptions:
 
@@ -163,31 +163,31 @@ Design assumptions:
 - The authoritative controller must fail by transitioning to or remaining CAS = SAFE
 - Recovery is explicit, not automatic
 
-Failing closed must take precedence over degraded continuation or partial authority leakage.
+Failure handling must prioritize preservation of system safety and authority integrity over continued operation.
 
 ### 6.1 Failure Classes
 
 Failure categories:
 
-- **Communication failure**
- - Loss of frame bytes
- - Corruption of frame bytes
- - Duplication of frame bytes
+- **Communication Failure**
+	- Loss of frame bytes
+ 	- Corruption of frame bytes
+ 	- Duplication of frame bytes
 
-- **Node failure**
- - Node reset
- - Node hang
- - Node crash
+- **Node Failure**
+	- Node reset
+	- Node hang
+	- Node crash
 
-- **Protocol failure**
- - Malformed or invalid frame transmission
- - Protocol interaction attempted while the system is in an invalid state
+- **Protocol Failure**
+	- Malformed or invalid frame transmission
+	- Protocol interaction attempted while the system is in an invalid state
 
-- **Behavioral failure**
- - Out of sequence actions
- - Unauthorized actions
+- **Behavioral Failure**
+	- Out of sequence actions
+	- Unauthorized actions
 
-Each category must be handled independently. No failure class may escalate authority. All failure classes must converge to SAFE state at the authoritative controller. Unauthorized actions must be denied and recorded as evidence events.
+Each category must be handled independently. No failure class may escalate authority. All failure classes must cause the authoritative controller to maintain or transition to CAS = SAFE. Unauthorized actions must be denied and recorded as evidence events.
 
 ### 6.2 Recovery Authority
 
@@ -199,7 +199,7 @@ Each category must be handled independently. No failure class may escalate autho
 ### 6.3 Irrecoverable Failure
 
 - Certain failure states permanently prohibit return to operational modes without full system reinitialization
-- The architecture does not guarantee recovery from arbitrary state corruption
+- The architecture does not guarantee recovery from arbitrary or undefined system state corruption.
 
 ---
 
@@ -211,7 +211,7 @@ The architecture requires logical separation, not physical adjacency.
 - Transport selection must not alter authority semantics
 - Latency affects responsiveness, not correctness
 
-Topology must not introduce implicit authority escalation.
+Topology must not introduce implicit authority escalation. Logical separation of responsibility classes must be preserved regardless of physical deployment topology.
 
 ---
 
@@ -219,13 +219,13 @@ Topology must not introduce implicit authority escalation.
 
 Invariant truths that must always hold:
 
-- Authority is singular and static
+- Authority is singular, static, and non-transferable
 - Safety dominates liveness
 - Absence of authorization results in denial
 - Failure never increases capability
 - Observation is never control
 - Authority is never implicit
-- CAS and SLS are independent and must not implicityly transition one another
+- CAS and SLS are independent and must not implicitly transition one another
 
 ---
 
@@ -239,6 +239,7 @@ This architecture does not attempt to provide:
 - Implicit redundancy
 - Cryptographic identity enforcement (current revision)
 - High availability via controller replication
+- Fully automated operation without human supervision
 
 These are consciously excluded to preserve determinism and auditability.
 
@@ -252,12 +253,12 @@ This architecture is constrained by:
 
 This architecture constrains:
 
-- `03_lifecycle_and_system.md`
+- `03_lifecycle_and_state.md`
 - `04_comm_protocol.md`
 - `05_security_threat_model.md`
 - `06_test_plan.md`
 
-Protocol details, message semantics, and security mechanisms must not violate the authority and trust boundaries defined here. Downstream documents may refine behavior but must not redefine authority, trust, or failure semantics established here. This document declares the existence and authority scope of CAS and SLS. All state semantics, transitions, and invariants are defined exclusively in `03_lifecycle_and_state.md`.
+Protocol details, message semantics, and security mechanisms must not violate the authority and trust boundaries defined in this document. Downstream documents may refine system behavior but must not redefine authority, trust, or failure semantics established here. This document declares the existence and authority scope of CAS and SLS. All state semantics, transitions, and invariants are defined exclusively in `03_lifecycle_and_state.md`.
 
 ---
 

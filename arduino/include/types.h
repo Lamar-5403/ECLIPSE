@@ -13,9 +13,9 @@ enum class life_cycle_state_t {
 // Control Authority State
 enum class control_authority_state_t {
     CAS_SAFE             = 0x01,
-    CAS_ARMING           = 0x02,
-    CAS_ARMED            = 0x03,
-    CAS_DISARMED         = 0x04,
+    CAS_DISARMED         = 0x02,
+    CAS_ARMING           = 0x03,
+    CAS_ARMED            = 0x04,
     CAS_LOCKOUT          = 0x05
 };
 

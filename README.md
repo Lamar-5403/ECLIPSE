@@ -52,11 +52,11 @@ All inter-device communication uses a framed protocol with:
 Invalid frames are discarded with no side effects.
 Detailed specifications are defined in `/docs/04_comm_protocol.md`.
 
-  ---
+---
 
 ## High-Level Architecture
 
-  ```text
+```text
         Arduino (Authority)
                 |
 --------------------------------
@@ -128,7 +128,3 @@ Formal documentation is located in the `/docs` directory:
 
 This project is under active development.
 Interfaces, protocols, and system behavior are subject to change.
-
-
-
-

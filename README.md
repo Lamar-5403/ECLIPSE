@@ -4,7 +4,7 @@ Embedded, Compartmentalized Layer for Integrity, Protection, Supervision, and Ev
 ---
 
 ## Overview
-ECLIPSE is a distributed embedded system designed to simulate, control, and supervise cybersecurity attack operations in a tightly governed environment. The system separates authority, execution, and evidence preservation across independent hardware platforms.
+E.C.L.I.P.S.E. is a distributed embedded system designed to simulate, control, and supervise cybersecurity attack operations in a tightly governed environment. The system separates authority, execution, and evidence preservation across independent hardware platforms.
 
 ---
 
@@ -49,8 +49,8 @@ All inter-device communication uses a framed protocol with:
 - CRC-16 validation
 - Deterministic parsing via FSM
 
-Invalid frames are discarded without side effects.
-Detailed specifications are defined in `/docs/03_comm_protocol.md`.
+Invalid frames are discarded with no side effects.
+Detailed specifications are defined in `/docs/04_comm_protocol.md`.
 
   ---
 
@@ -68,15 +68,24 @@ Pi Zero (Evidence)   Pi 5 (Attack Execution)
 
 ## System States
 
-The system operates under a finite set of global states enforced by the Arduino controller:
+The system operates under two independent finite state machines enforced by the Arduino authority controller:
 
+System Lifecycle State (SLS):
+- BOOTSTRAP
+- OPERATIONAL
+- DEGRADED
+- FAULT
+
+Control Authority State (CAS):
 - SAFE
+- DISARMED
 - ARMING
 - ARMED
-- DISARMED
 - LOCKOUT
 
-Attack execution is only permitted while the system is in the ARMED state.
+Attack execution is only permitted when:
+- SLS = OPERATIONAL or DEGRADED
+- CAS = ARMED
 
 ---
 

@@ -1,6 +1,6 @@
 # SYSTEM LIFECYCLE AND STATE
 
-Document Version: 1.0.0
+Document Version: 1.0.0  
 Status: Released
 
 ---

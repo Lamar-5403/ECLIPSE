@@ -79,8 +79,8 @@ Defines the minimum requirements for tracking component origin, part identity, a
 | 2 | Starter Kit (Procurement Source) | GeeekPi | UNO R4 WiFi Starter Kit | 1 | Procurement bundle used to obtain board |
 | 3 | Prototyping Components | GeeekPi | Breadboard / jumper wires / passive components | As needed | Provided by kit but not strictly required for system replication |
 
-Approximate procurement source: Amazon.com
-Approximate procurement cost: **$53 USD (kit total)**
+Approximate procurement source: Amazon.com  
+Approximate procurement cost: **$53 USD (kit total)**  
 
 ### 5.2 Attack Simulation Node Assembly
 
@@ -91,8 +91,8 @@ Approximate procurement cost: **$53 USD (kit total)**
 | 3 | Power Supply | CanaKit | Pi 5 Power Supply | 1 | Included in starter kit |
 | 4 | Enclosure | CanaKit | Pi 5 Case w/ Cooling Fan | 1 | Included in starter kit |
 
-Procurement source: CanaKit Raspberry Pi Starter Kit
-Approximate procurement cost: **$200 USD**
+Procurement source: CanaKit Raspberry Pi Starter Kit  
+Approximate procurement cost: **$200 USD**  
 
 ### 5.3 Evidence Protection Node Assembly
 
@@ -104,15 +104,15 @@ Approximate procurement cost: **$200 USD**
 
 Procurement sources:
 
-- Raspberry Pi Zero WH: Amazon
-- microSD Card: Best Buy
-- HDMI Cable: Best Buy
+- Raspberry Pi Zero WH: Amazon  
+- microSD Card: Best Buy  
+- HDMI Cable: Best Buy  
 
 Approximate procurement costs:
 
-- Raspberry Pi Zero WH: **$25 USD**
-- microSD Card: **$20-30 USD**
-- HDMI Cable: **~$2 USD**
+- Raspberry Pi Zero WH: **$25 USD**  
+- microSD Card: **$20-30 USD**  
+- HDMI Cable: **~$2 USD**  
 
 
 ---

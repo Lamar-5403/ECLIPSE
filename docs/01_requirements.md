@@ -108,12 +108,12 @@ The system returns to an idle SAFE state following the completion of the operati
 
 Requirement IDs shall follow the format:
 
-SYS-<TYPE>-###
+SYS-\<TYPE\>-###
 
 Where:
 
 - SYS identifies a system-level requirement
-- <TYPE> identifies the requirement class
+- \<TYPE\> identifies the requirement class
 - ### is a zero-padded sequential identifier
 
 Type definitions are as follows:

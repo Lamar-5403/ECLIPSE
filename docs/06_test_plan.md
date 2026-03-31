@@ -122,13 +122,13 @@ Defines how test configurations are controlled and tracked:
 
 Test Case IDs shall follow the format:
 
-TC-<TYPE>-###
+TC-\<TYPE\>-###
 
 Where:
 
 - TC identifies a test case
-- <TYPE> identifies the system domain under test
-- ### is a zero-padded sequential identifier within the type
+- \<TYPE\> identifies the system domain under test
+- \#\#\# is a zero-padded sequential identifier within the type
 
 Type definitions are as follows:
 

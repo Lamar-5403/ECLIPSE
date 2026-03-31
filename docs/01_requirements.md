@@ -114,7 +114,7 @@ Where:
 
 - SYS identifies a system-level requirement
 - \<TYPE\> identifies the requirement class
-- ### is a zero-padded sequential identifier
+- \### is a zero-padded sequential identifier
 
 Type definitions are as follows:
 

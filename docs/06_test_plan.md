@@ -120,4 +120,183 @@ Defines how test configurations are controlled and tracked:
 
 Defines mapping between system requirements and test cases.
 
+| Requirement ID | Description | Test Case ID | Verification Method | Status |
+| ---- | ---- | ---- | ---- | ---- |
+|each requirement
 
+---
+
+## 8.0 TEST CASE STRUCTURE
+
+Each test case shall follow a standardized format:
+
+### 8.X Test Case: [something]
+
+- Test Case ID: 
+- Objective:
+- Related Requirements:
+- Preconditions:
+- Test Inputs:
+- Test Procedure
+- Expected Results:
+- Pass/Fail Criteria:
+- Postconditions:
+
+---
+
+## 9.0 FUNCTIONAL TESTS
+
+Validates correct system behavior under normal operation.
+
+- Valid command execution
+- Authorized state transitions
+- Proper evidence logging
+- Inter-node communication correctness
+
+---
+
+## 10.0 STATE TRANSITION TESTING
+
+Validates lifecycle enforcement:
+
+- SAFE -> ARMED transitions
+- ARMED -> EXECUTION behavior
+- Invalid transition rejection
+- State persistence and synchronization
+
+---
+
+## 11.0 PROTOCOL VALIDATION TESTING
+
+Validates communication protocol integrity:
+
+- Frame structure validation
+- Length and boundary checks
+- CRC validation
+- Rejection of malformed frames
+
+---
+
+## 12.0 SECURITY AND ADVERSARIAL TESTING
+
+Validates system behavior under adversarial conditions.
+
+### 12.1 Command Injection Testing
+
+### 12.2 Command Replay Testing
+
+### 12.3 Node Impersonation Testing
+
+### 12.4 Protocol Fuzzing
+
+### 12.5 Unauthorized State Transition Attempts
+
+Each test must verify rejection behavior and system stability.
+
+--- 
+
+## 13.0 FAULT INJECTION TESTING
+
+Validates system response to faults:
+
+- Communication loss 
+- Node failure
+- Power interruption
+- Corrupted inputs
+
+Expected outcomes:
+
+- Transition to SAFE / FAULT / DEGRADED states
+- No unsafe execution
+
+---
+
+## 14.0 EVIDENCE INTEGRITY VALIDATION
+
+Validates evidence protection mechanisms:
+
+- Log completeness
+- Append-only enforcement
+- Resistance to modification
+- Cross-node consistency
+
+---
+
+## 15.0 PERFORMANCE AND STABILITY TESTING
+
+Validates system behavior under load:
+
+- Message throughput limits
+- Sustained operation
+- Resource utilization constraints
+
+---
+
+## 16.0 TEST EXECUTION PROCEDURES
+
+Defines:
+
+- Test sequencing
+- Execution steps
+- Data capture requirements
+- Logging standards
+
+---
+
+## 17.0 PASS / FAIL CRITERIA
+
+Defines global criteria:
+
+- A test passes only if all expected results are met exactly
+- Any deviation constitues failure
+- Critical failures require halt and investigation
+
+---
+
+## 18.0 DEFECT TRACKING AND RESOLUTION
+
+Defines:
+
+- Defect identification
+- Severity classing 
+- Resolution workflow 
+- Retest requirements
+
+---
+
+## 19.0 TEST REPORTING 
+
+Defines outputs of test execution:
+
+- Test execution logs
+- Pass / fail summaries
+- Coverage reports 
+- Defect summaries 
+
+---
+
+## 20.0 ASSUMPTIONS AND CONSTRAINTS
+
+Defines:
+
+- Environmental assumptions
+- Hardware constraints
+- Known limitations impacting testing
+
+## 21.0 RELATIONSHIP TO OTHER DOCUMENTS
+
+This document is constrained by:
+
+- `01_requirements.md`
+- `02_architecture.md`
+- `03_lifecycle_and_state.md`
+- `04_comm_protocol.md`
+
+This document constrains:
+
+- System validation artifacts
+- Test execution records
+
+---
+
+END OF DOCUMENT 

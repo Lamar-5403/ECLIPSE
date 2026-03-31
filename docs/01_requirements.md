@@ -50,6 +50,7 @@ The following documents form a part of this specification to the extent specifie
 - `00_overview.md`
 - `04_comm_protocol.md`
 - `05_security_threat_model.md`
+- `06_test_plan.md`
 
 ---
 

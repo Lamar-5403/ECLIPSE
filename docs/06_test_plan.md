@@ -118,11 +118,47 @@ Defines how test configurations are controlled and tracked:
 
 ## 7.0 REQUIREMENTS TRACEABILITY
 
+### 7.1 Test Case Identification Scheme
+
+Test Case IDs shall follow the format:
+
+TC-<TYPE>-###
+
+Where:
+
+- TC identifies a test case
+- <TYPE> identifies the system domain under test
+- ### is a zero-padded sequential identifier within the type
+
+Type definitions are as follows:
+
+- BOOT  : System initialization and startup behavior
+- STATE : System state machines and transitions (SLS / CAS)
+- AUTH  : Authority enforcement and control boundaries
+- EXEC  : Command execution behavior
+- PROTO : Communication protocol and frame validation
+- SEC   : Adversarial and security-specific testing
+- FAULT : Fault injection and failure handling
+- EVID  : Evidence collection and integrity
+- INTEG : Multi-node integration behavior
+- ARCH  : Architectural validation (inspection-based)
+
+### 7.2 Requirements Traceability Table
+
 Defines mapping between system requirements and test cases.
 
 | Requirement ID | Description | Test Case ID | Verification Method | Status |
 | ---- | ---- | ---- | ---- | ---- |
-|each requirement
+| SYS-FR-001 | The system shall initialize into a known SAFE state on boot | TC-STATE-001 | State Transition Test | Pending |
+| SYS-FR-001 | The system shall initialize into a known SAFE state on boot | TC-BOOT-001 | Functional Test | Pending |
+| SYS-FR-002 | The authoritative controller shall maintain a single global system state | TC-ARCH-001 | Inspection | Pending |
+| SYS-FR-002 | The authoritative controller shall maintain a single global system state | TC-STATE-002 | State Transition Test | Pending |
+| SYS-FR-003 | Only the authoritative controller shall modify the system state | TC-AUTH-001 | Adversarial Test | Pending |
+| SYS-FR-003 | Only the authoritative controller shall modify the system state | TC-STATE-003 | State Transition Test | Pending |
+| SYS-FR-004 | The execution controller shall execute only commands authorized by the authoritative controller | TC-EXEC-001 | Functional Test | Pending |
+| SYS-FR-004 | The execution controller shall execute only commands authorized by the authoritative controller | TC-SEC-001 | Adversarial Test | Pending |
+| SYS-FR-005 | The system shall verify message integrity using CRC before processing frames | TC-PROTO-001 | Protocol Validation Test | Pending |
+| SYS-FR-005 | The system shall verify message integrity using CRC before processing frames | TC-PROTO-002 | Fault Injection Test | Pending |
 
 ---
 
@@ -130,7 +166,7 @@ Defines mapping between system requirements and test cases.
 
 Each test case shall follow a standardized format:
 
-### 8.X Test Case: [something]
+### 8.1 Test Case: [something]
 
 - Test Case ID: 
 - Objective:
@@ -144,7 +180,7 @@ Each test case shall follow a standardized format:
 
 ---
 
-## 9.0 FUNCTIONAL TESTS
+## 9.0 FUNCTIONAL TEST
 
 Validates correct system behavior under normal operation.
 
@@ -155,7 +191,7 @@ Validates correct system behavior under normal operation.
 
 ---
 
-## 10.0 STATE TRANSITION TESTING
+## 10.0 STATE TRANSITION TEST
 
 Validates lifecycle enforcement:
 
@@ -166,7 +202,7 @@ Validates lifecycle enforcement:
 
 ---
 
-## 11.0 PROTOCOL VALIDATION TESTING
+## 11.0 PROTOCOL VALIDATION TEST
 
 Validates communication protocol integrity:
 
@@ -177,7 +213,7 @@ Validates communication protocol integrity:
 
 ---
 
-## 12.0 SECURITY AND ADVERSARIAL TESTING
+## 12.0 ADVERSARIAL TEST
 
 Validates system behavior under adversarial conditions.
 
@@ -195,7 +231,7 @@ Each test must verify rejection behavior and system stability.
 
 --- 
 
-## 13.0 FAULT INJECTION TESTING
+## 13.0 FAULT INJECTION TEST
 
 Validates system response to faults:
 

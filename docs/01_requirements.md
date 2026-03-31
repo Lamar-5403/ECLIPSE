@@ -104,7 +104,28 @@ The system returns to an idle SAFE state following the completion of the operati
 
 ## 8.0 SYSTEM REQUIREMENTS
 
-### 8.1 Functional Requirements
+### 8.1 Requirement Identification Scheme
+
+Requirement IDs shall follow the format:
+
+SYS-<TYPE>-###
+
+Where:
+
+- SYS identifies a system-level requirement
+- <TYPE> identifies the requirement class
+- ### is a zero-padded sequential identifier
+
+Type definitions are as follows:
+
+- FR   : Functional Requirement
+- COM  : Communication Requirement
+- SEC  : Security Requirement
+- LOG  : Evidence and Logging Requirement
+- REL  : Reliability Requirement
+- PERF : Performance Requirement
+
+### 8.2 Functional Requirements
 
 | Requirement ID | Description | Verification |
 |:--- | :--- | :--- |
@@ -114,7 +135,7 @@ The system returns to an idle SAFE state following the completion of the operati
 | SYS-FR-004 | The execution controller shall execute only commands authorized by the authoritative controller. | Test |
 | SYS-FR-005 | The system shall verify message integrity using CRC before processing frames. | Test |
 
-### 8.2 Communication Requirements
+### 8.3 Communication Requirements
 
 | Requirement ID | Description | Verification |
 |:--- | :--- | :--- |
@@ -122,7 +143,7 @@ The system returns to an idle SAFE state following the completion of the operati
 | SYS-COM-002 | The decoder shall reject frames failing CRC verification. | Test |
 | SYS-COM-003 | The system shall process frames only after detecting a valid frame start byte. | Test |
 
-### 8.3 Security Requirements
+### 8.4 Security Requirements
 
 | Requirement ID | Description | Verification |
 |:--- | :--- | :--- |
@@ -130,7 +151,7 @@ The system returns to an idle SAFE state following the completion of the operati
 | SYS-SEC-002 | The system shall prevent non-authoritative nodes from modifying system state. | Test |
 | SYS-SEC-003 | The system shall log all command authorization events. | Inspection |
 
-### 8.4 Evidence and Logging Requirements
+### 8.5 Evidence and Logging Requirements
 
 | Requirement ID | Description | Verification |
 |:--- | :--- | :--- |
@@ -138,14 +159,14 @@ The system returns to an idle SAFE state following the completion of the operati
 | SYS-LOG-002 | The system shall record all command execution attempts. | Test |
 | SYS-LOG-003 | The system shall record execution timestamps for each operation. | Test |
 
-### 8.5 Reliability Requirements
+### 8.6 Reliability Requirements
 
 | Requirement ID | Description | Verification |
 |:--- | :--- | :--- |
 | SYS-REL-001 | The system shall detect corrupted communication frames using CRC. | Test |
 | SYS-REL-002 | The system shall continue operation if a non-authoritative node disconnects. | Test |
 
-### 8.6 Performance Requirements
+### 8.7 Performance Requirements
 
 | Requirement ID | Description | Verification |
 |:--- | :--- | :--- |

@@ -142,6 +142,7 @@ Type definitions are as follows:
 - EVID  : Evidence collection and integrity
 - INTEG : Multi-node integration behavior
 - ARCH  : Architectural validation (inspection-based)
+- PERF  : System Performance
 
 ### 7.2 Requirements Traceability Table
 
@@ -159,6 +160,33 @@ Defines mapping between system requirements and test cases.
 | SYS-FR-004 | The execution controller shall execute only commands authorized by the authoritative controller | TC-SEC-001 | Adversarial Test | Pending |
 | SYS-FR-005 | The system shall verify message integrity using CRC before processing frames | TC-PROTO-001 | Protocol Validation Test | Pending |
 | SYS-FR-005 | The system shall verify message integrity using CRC before processing frames | TC-PROTO-002 | Fault Injection Test | Pending |
+| SYS-COM-001 | The system shall frame all inter-node communication using the defined transport protocol | TC-ARCH-002 | Inspection | Pending |
+| SYS-COM-001 | The system shall frame all inter-node communication using the defined transport protocol | TC-PROTO-003 | Protocol Validation Test | Pending |
+| SYS-COM-002 | The decoder shall reject frames failing CRC verification | TC-PROTO-004 | Protocol Validation Test | Pending |
+| SYS-COM-002 | The decoder shall reject frames failing CRC verification | TC-FAULT-001 | Fault Injection Test | Pending |
+| SYS-COM-003 | The system shall process frames only after detecting a valid frame start byte | TC-PROTO-005 | Protocol Validation Test | Pending |
+| SYS-COM-003 | The system shall process frames only after detecting a valid frame start byte | TC-SEC-002 | Adversarial Test | Pending |
+| SYS-SEC-001 | Only the authoritative controller shall authorize execution commands | TC-AUTH-002 | Functional Test | Pending |
+| SYS-SEC-001 | Only the authoritative controller shall authorize execution commands | TC-SEC-003 | Adversarial Test | Pending |
+| SYS-SEC-002 | The system shall prevent non-authoritative nodes from modifying system state | TC-AUTH-003 | Adversarial Test | Pending |
+| SYS-SEC-002 | The system shall prevent non-authoritative nodes from modifying system state | TC-STATE-004 | State Transition Test | Pending |
+| SYS-SEC-003 | The system shall log all command authorization events | TC-EVID-001 | Functional Test | Pending |
+| SYS-SEC-003 | The system shall log all command authorization events | TC-ARCH-003 | Inspection | Pending |
+| SYS-LOG-001 | The system shall generate an append-only execution log | TC-EVID-002 | Inspection | Pending |
+| SYS-LOG-001 | The system shall generate an append-only execution log | TC-EVID-003 | Functional Test | Pending |
+| SYS-LOG-002 | The system shall record all command execution attempts | TC-EVID-004 | Functional Test | Pending |
+| SYS-LOG-002 | The system shall record all command execution attempts | TC-SEC-004 | Adversarial Test | Pending |
+| SYS-LOG-003 | The system shall record execution timestamps for each operation | TC-EVID-005 | Functional Test | Pending |
+| SYS-LOG-003 | The system shall record execution timestamps for each operation | TC-INTEG-001 | Integration Test | Pending |
+| SYS-REL-001 | The system shall detect corrupted communication frames using CRC | TC-PROTO-006 | Protocol Validation Test | Pending |
+| SYS-REL-001 | The system shall detect corrupted communication frames using CRC | TC-FAULT-002 | Fault Injection Test | Pending |
+| SYS-REL-002 | The system shall continue operation if a non-authoritative node disconnects | TC-FAULT-003 | Fault Injection Test | Pending |
+| SYS-REL-002 | The system shall continue operation if a non-authoritative node disconnects | TC-INTEG-002 | Integration Test | Pending |
+| SYS-PERF-001 | The system shall process incoming frames within 10 milliseconds | TC-PERF-001 | Functional Test | Pending |
+| SYS-PERF-001 | The system shall process incoming frames within 10 milliseconds | TC-PERF-002 | Performance Test | Pending |
+| SYS-PERF-002 | The system shall process authorization requests within 200 milliseconds | TC-PERF-003 | Functional Test | Pending |
+| SYS-PERF-002 | The system shall process authorization requests within 200 milliseconds | TC-PERF-004 | Performance Test | Pending |
+
 
 ---
 

@@ -22,7 +22,3 @@ def scan_ports(data):
                     "state": nm[ip][proto][port]["state"]
                 })
     return data
-
-# if __name__ == "__main__":
-#     results = scan_ports()
-#     print(results)

@@ -18,6 +18,7 @@ class msg_type_t(IntEnum):
     MSG_STATUS_REQUEST  = 0x03
     MSG_STATUS_RESPONSE = 0x04
     MSG_HEARTBEAT       = 0x05
+    MSG_AUTH_GRANTED    = 0x06
 
 # MITRE ATT&CK tactic codes
 class tactic_code_t(IntEnum):

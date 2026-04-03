@@ -6,7 +6,7 @@
 
 struct frame_t;
 
-void system_controller_wifi_status_cb(connection_status_t);
+// void system_controller_wifi_status_cb(connection_status_t);
 void system_controller_handle_frame_cb(frame_t*);
 
 bool tactic_allowed(uint8_t);

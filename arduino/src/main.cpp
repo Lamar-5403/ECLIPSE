@@ -13,7 +13,7 @@ void setup() {
   control_authority_controller_init();
   frame_decoder_init();
   transport_serial_init();
-  transport_wifi_init();
+  // transport_wifi_init();
 
   set_life_cycle_state(life_cycle_state_t::OPERATIONAL);
 
@@ -22,5 +22,5 @@ void setup() {
 
 void loop() {
   transport_serial_poll();
-  transport_wifi_poll();
+  // transport_wifi_poll();
 }

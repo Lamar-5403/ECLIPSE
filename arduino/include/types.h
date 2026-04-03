@@ -26,6 +26,7 @@ enum class msg_type_t : uint8_t {
     MSG_STATUS_REQUEST   = 0x03,
     MSG_STATUS_RESPONSE  = 0x04,
     MSG_HEARTBEAT        = 0x05,
+    MSG_AUTH_GRANTED     = 0x06
 };
 
 // Frame Struct
